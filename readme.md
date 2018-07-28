@@ -16,11 +16,11 @@ Install and setup a psql database to be used in mbuddy project. This database wi
 
 2 - You need the postgresql installed. More details above.
 
-Check if postgresql already exists
+**Check if postgresql already exists**
 
-Run `postgres -V` to check if you already have postgresql in your PC. If you don't have, go to **Step 1** so you will install it. If you have, go to **Step 2** to make the setup.
+Run `postgres -V` to check if you already have psql in your PC. If you don't have, go to **Step 1** to do it. If you have, go to **Step 2** to make the setup.
 
-*Note:* If you already have the psql installed and an user and database named **buddy** or you want to create another user, password and database name instead of it, just do it, jump directly to **Step 3** and **CHANGE** the `.ENV` file with the correct names that you created to make this run.
+*Note:* If you already have the psql installed and an user and database named **mbuddy** or you want to create another user, password and database name instead of it, just do it, jump directly to **Step 3** and **CHANGE** the `.ENV` file with the correct names that you created to make this run.
 
 ### Step 1 - PSQL Install
 
@@ -60,17 +60,21 @@ Run `postgres -V` to check if you already have postgresql in your PC. If you don
 
 3.1 - Fork this repo in Github and after that clone it to any folder in your machine using `git clone` command.
 
-3.2 - Enter in this folder to do the next commands.
+3.2 - Enter in the created folder to do the next commands.
 
 3.3 - Run `npm install` inside your new folder to install all the dependencies of the project.
 
 3.4 - Create an .ENV file using the command `touch .env` and insert the content above:
-`DB_HOST=localhost
+
+```
+DB_HOST=localhost
 DB_USER=mbuddy
 DB_PASS=mbuddy
 DB_NAME=mbuddy
 DB_SSL=true if heroku
 DB_PORT=5432`
+```
+
 This file create our environment variables with our host, user, password, port (default) and database name in PSQL.
 
 3.5 - Run `knex migrate:latest` to create all the tables to our **mbuddy** database.
