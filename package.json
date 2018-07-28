@@ -2,9 +2,13 @@
   "name": "market-buddy-database",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "local": "./node_modules/.bin/nodemon --ignore public/",
+    "knex": "./node_modules/.bin/knex"
   },
   "repository": {
     "type": "git",
@@ -20,10 +24,15 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
+    "ejs": "^2.6.1",
     "express": "^4.16.3",
     "knex": "^0.15.2",
+    "knex-logger": "^0.1.0",
     "knex-migrate": "^1.6.1",
-    "nodemon": "^1.18.3",
+    "morgan": "^1.9.0",
     "pg": "^7.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
   }
 }
