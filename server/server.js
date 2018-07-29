@@ -1,12 +1,3 @@
-
-// const IP = '0.0.0.0';
-// // process.env.PORT in case Heroku
-// const PORT = process.env.PORT || 7000;
-// const ENV = process.env.ENV || "development";
-
-// const express = require('express')
-// const app = express()
-
 "use strict";
 
 // dotenv npm package to loads environment variables
@@ -24,6 +15,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require('morgan');
 const knexLogger = require('knex-logger');
+const cors = require('cors');
 
 // KNEX SETUP
 const knexConfig = require("../knexfile");
@@ -36,26 +28,23 @@ app.set("view engine", "ejs");
 // MIDDLEWARES
 app.use(morgan('dev'));
 app.use(knexLogger(knex));
-
-// // ROUTES
-// // Separated Routes for each Resource
-// const usersRoutes = require("./routes/users");
+app.use(cors());
 
 // DATAHELPERS
 const products_helpers = require("./lib/products_helpers.js")(knex);
+const prices_helpers = require("./lib/prices_helpers.js")(knex);
 
 // ROUTES
 const productsRoutes = require('./routes/products')(products_helpers);
+const pricesRoutes = require('./routes/prices')(prices_helpers);
 
 // MOUNTS
 app.use('/products', productsRoutes);
+app.use('/prices', pricesRoutes);
 
-//   app.get("/", (req, res) => {
-//     res.render("index", { myUser: req.session.myUser, myName: req.session.myName } );
-//   });
+app.get("/", (req, res) => { res.render("index") });
 
-app.get('/', (req, res) => res.send('Hello World!'))
+// app.get('/', (req, res) => res.send('Hello World!'))
 
-app.listen(PORT, IP, () => {
-  console.log("Example app listening on port " + PORT);
-});
+app.listen(PORT, IP, () => { console.log("Example app listening on port " + PORT) });
+

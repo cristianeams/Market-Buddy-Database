@@ -25,12 +25,22 @@ module.exports = function(DataHelpers) {
 
   productsRoutes.get("/:id", function(req, res) {
     let myProductID = req.params.id;
-    DataHelpers.getProductByID(myProductID, (err, product, total) => {
+    DataHelpers.getProductByID(myProductID, (err, product) => {
+      if (err) {
+        res.status(500).json({ error: 'Product not found' });
+      } else {
+        res.status(201).json(product);
+      }
+    });
+  });
+
+  productsRoutes.get("/:id/prices", function(req, res) {
+    let myProductID = req.params.id;
+    DataHelpers.getProductPrices(myProductID, (err, product, average) => {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        // let myTotal = { total: total };
-        // product.unshift(myTotal);
+        console.log('average = ', average);
         res.status(201).json(product);
       }
     });
