@@ -12,10 +12,10 @@ module.exports = function(DataHelpers) {
 
     DataHelpers.getPrices(product_id, store_id, (err, prices, total) => {
       if (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Search without result' });
       } else {
         // let myTotal = { total: total };
-        // products.unshift(myTotal);
+        // prices.unshift(myTotal);
         res.status(201).json(prices);
       }
     });

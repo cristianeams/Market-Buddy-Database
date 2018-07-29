@@ -13,7 +13,7 @@ module.exports = function(DataHelpers) {
 
     DataHelpers.getProducts(name, upc, ean, (err, products, total) => {
       if (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Search without result' });
       } else {
         // let myTotal = { total: total };
         // products.unshift(myTotal);
@@ -38,9 +38,9 @@ module.exports = function(DataHelpers) {
     let myProductID = req.params.id;
     DataHelpers.getProductPrices(myProductID, (err, product, average) => {
       if (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Product not found / No prices for this product' });
       } else {
-        console.log('average = ', average);
+        // console.log('average = ', average);
         res.status(201).json(product);
       }
     });
