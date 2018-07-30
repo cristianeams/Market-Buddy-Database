@@ -10,17 +10,37 @@
   <p>Mbuddy Database API</p>
   
   PRODUCTS
-  <table>
-    <tr>
-      <td>/products</td>
-      <td>Get all products (you can use <u>name</u>, <u>upc</u> and/or <u>ean</u> as querystring</td>
-    </tr>
-    <tr><td colspan=2><i>Example:</i> /products or /products/?name=honey or /products/?upc=123456789</td></tr>
-    <tr>
-      <td>/products/:id</td>
-      <td>Get a product by ID</td>
-    </tr>
-  </table>
+  <p>(name, upc and ean as querystring in /products)</p>
+  <ul>
+    <li>/products</li>
+    <li>/products/:id</li>
+    <li>/products/:id/prices</li>
+  </ul>
+
+  PRICES
+  <p>(product_id and store_id as querystring in /prices)</p>
+  <ul>
+    <li>/prices</li>
+    <li>/prices/:id</li>
+  </ul>
+
+  STORES
+  <p>(name, location, latitude and longitude as querystring in /stores)</p>
+  <ul>
+    <li>/stores</li>
+    <li>/stores/:id</li>
+    <li>/stores/:id/prices</li>
+    <li>/stores/:id/products</li>
+    <li>/stores/:id/products/:id</li>
+  </ul>
+
+  CATEGORIES
+  <p>(name as querystring in /categories)</p>
+  <ul>
+    <li>/categories</li>
+    <li>/categories/:id</li>
+    <li>/categories/:id/products</li>
+  </ul>
 
 </body>
 </html>
