@@ -50,18 +50,6 @@ app.use('/categories', categoriesRoutes);
 
 app.get("/", (req, res) => { res.render("index") });
 
-// app.get('/', (req, res) => res.send('Hello World!'))
-
-// knex('products')
-// .returning('id')
-// .insert({name: 'teste', upc: '1', ean: '1', image: 'teste', brand: 'teste', category_id: 1})
-// .then((result) => {
-//   console.log(result);
-// })
-// .catch((error) => {
-//   console.log(error);
-// })
-
 app.listen(PORT, IP, () => {
   console.log("Example app listening on port " + PORT)
 });
