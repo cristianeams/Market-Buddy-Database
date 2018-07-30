@@ -29,7 +29,7 @@ module.exports = function makeDataHelpers(db) {
     getProductByID: function(product_id, cb) {
       db.select('*').from('products').where('id',product_id)
       .then((product) => {
-        cb(null, product)
+        cb(null, product, product.length)
       })
       .catch(err => {
         return cb(err)
@@ -43,10 +43,11 @@ module.exports = function makeDataHelpers(db) {
       query += 'where product_id = ? group by product_id';
       db.raw(query,product_id)
       .then((result) => { average = result.rows[0].average })
+      .catch(err => { average = 0 })
 
       db.select('*').from('prices').where('product_id',product_id)
       .then((products) => {
-        cb(null, products, average)
+        cb(null, products, average, products.length)
       })
       .catch(err => {
         return cb(err)

@@ -13,11 +13,15 @@ module.exports = function(DataHelpers) {
 
     DataHelpers.getProducts(name, upc, ean, (err, products, total) => {
       if (err) {
-        res.status(500).json({ error: 'Search without result' });
+        res.status(500).json({ error: err.message });
       } else {
         // let myTotal = { total: total };
         // products.unshift(myTotal);
-        res.status(201).json(products);
+        if (total) {
+          res.status(201).json(products);
+        } else {
+          res.status(500).json({ error: 'Product not found' })
+        }
       }
     });
 
@@ -25,23 +29,30 @@ module.exports = function(DataHelpers) {
 
   productsRoutes.get("/:id", function(req, res) {
     let myProductID = req.params.id;
-    DataHelpers.getProductByID(myProductID, (err, product) => {
+    DataHelpers.getProductByID(myProductID, (err, product, total) => {
       if (err) {
-        res.status(500).json({ error: 'Product not found' });
+        res.status(500).json({ error: err.message });
       } else {
-        res.status(201).json(product);
+        if (total) {
+          res.status(201).json(product);
+        } else {
+          res.status(500).json({ error: 'Product not found' });
+        }
       }
     });
   });
 
   productsRoutes.get("/:id/prices", function(req, res) {
     let myProductID = req.params.id;
-    DataHelpers.getProductPrices(myProductID, (err, product, average) => {
+    DataHelpers.getProductPrices(myProductID, (err, product, average, total) => {
       if (err) {
-        res.status(500).json({ error: 'Product not found / No prices for this product' });
+        res.status(500).json({ error: err.message });
       } else {
-        // console.log('average = ', average);
-        res.status(201).json(product);
+        if (total) {
+          res.status(201).json(product);
+        } else {
+          res.status(201).json({ error: 'Product not found or product without prices' });
+        }
       }
     });
   });
