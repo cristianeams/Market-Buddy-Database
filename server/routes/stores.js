@@ -14,11 +14,15 @@ module.exports = function(DataHelpers) {
 
     DataHelpers.getStores(name, location, latitude, longitude, (err, stores, total) => {
       if (err) {
-        res.status(500).json({ error: 'Search without result' });
+        res.status(500).json({ error: err.message });
       } else {
         // let myTotal = { total: total };
         // stores.unshift(myTotal);
-        res.status(201).json(stores);
+        if (total) {
+          res.status(201).json(stores);
+        } else {
+          res.status(500).json({ error: 'Store not found' });
+        }
       }
     });
 
@@ -26,23 +30,61 @@ module.exports = function(DataHelpers) {
 
   storesRoutes.get("/:id", function(req, res) {
     let myStoreID = req.params.id;
-    DataHelpers.getStoreByID(myStoreID, (err, store) => {
+    DataHelpers.getStoreByID(myStoreID, (err, store, total) => {
       if (err) {
-        res.status(500).json({ error: 'Store not found' });
+        res.status(500).json({ error: err.message });
       } else {
-        res.status(201).json(store);
+        if (total) {
+          res.status(201).json(store);
+        } else {
+          res.status(500).json({ error: 'Store not found' });
+        }
       }
     });
   });
 
   storesRoutes.get("/:id/prices", function(req, res) {
     let myStoreID = req.params.id;
-    DataHelpers.getStorePrices(myStoreID, (err, store, average) => {
+    DataHelpers.getStorePrices(myStoreID, (err, store, average, total) => {
       if (err) {
-        res.status(500).json({ error: 'Store not found / No prices for this store' });
+        res.status(500).json({ error: err.message });
       } else {
-        console.log('average = ', average);
-        res.status(201).json(store);
+        if (total) {
+          res.status(201).json(store);
+        } else {
+          res.status(201).json({ error: 'Store not found' });
+        }
+      }
+    });
+  });
+
+  storesRoutes.get("/:id/products", function(req, res) {
+    let myStoreID = req.params.id;
+    DataHelpers.getStoreProducts(myStoreID, (err, products, total) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        if (total) {
+          res.status(201).json(products);
+        } else {
+          res.status(201).json({ error: 'Store not found' });
+        }
+      }
+    });
+  });
+
+  storesRoutes.get("/:id/products/:pid", function(req, res) {
+    let myStoreID = req.params.id;
+    let myProductID = req.params.pid;
+    DataHelpers.getStoreProductsByID(myStoreID, myProductID, (err, product, total) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        if (total) {
+          res.status(201).json(product);
+        } else {
+          res.status(201).json({ error: 'Store or Product not found' });
+        }
       }
     });
   });
