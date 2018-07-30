@@ -26,7 +26,7 @@ module.exports = function makeDataHelpers(db) {
     getPriceByID: function(price_id, cb) {
       db.select('*').from('prices').where('id',price_id)
       .then((price) => {
-        cb(null, price)
+        cb(null, price, price.length)
       })
       .catch(err => {
         return cb(err)

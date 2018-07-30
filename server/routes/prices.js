@@ -12,11 +12,15 @@ module.exports = function(DataHelpers) {
 
     DataHelpers.getPrices(product_id, store_id, (err, prices, total) => {
       if (err) {
-        res.status(500).json({ error: 'Search without result' });
+        res.status(500).json({ error: err.message });
       } else {
         // let myTotal = { total: total };
         // prices.unshift(myTotal);
-        res.status(201).json(prices);
+        if (total) {
+          res.status(201).json(prices);
+        } else {
+          res.status(500).json({ error: 'Price not found' });
+        }
       }
     });
 
@@ -24,11 +28,15 @@ module.exports = function(DataHelpers) {
 
   pricesRoutes.get("/:id", function(req, res) {
     let myPriceID = req.params.id;
-    DataHelpers.getPriceByID(myPriceID, (err, price) => {
+    DataHelpers.getPriceByID(myPriceID, (err, price, total) => {
       if (err) {
-        res.status(500).json({ error: 'Price not found' });
+        res.status(500).json({ error: err.message });
       } else {
-        res.status(201).json(price);
+        if (total) {
+          res.status(201).json(price);
+        } else {
+          res.status(500).json({ error: 'Price not found' });
+        }
       }
     });
   });
