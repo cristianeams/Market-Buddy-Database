@@ -34,20 +34,39 @@ app.use(cors());
 const products_helpers = require("./lib/products_helpers.js")(knex);
 const prices_helpers = require("./lib/prices_helpers.js")(knex);
 const stores_helpers = require("./lib/stores_helpers.js")(knex);
+const categories_helpers = require("./lib/categories_helpers.js")(knex);
 
 // ROUTES
 const productsRoutes = require('./routes/products')(products_helpers);
 const pricesRoutes = require('./routes/prices')(prices_helpers);
 const storesRoutes = require('./routes/stores')(stores_helpers);
+const categoriesRoutes = require('./routes/categories')(categories_helpers);
 
 // MOUNTS
 app.use('/products', productsRoutes);
 app.use('/prices', pricesRoutes);
 app.use('/stores', storesRoutes);
+app.use('/categories', categoriesRoutes);
 
 app.get("/", (req, res) => { res.render("index") });
 
 // app.get('/', (req, res) => res.send('Hello World!'))
 
-app.listen(PORT, IP, () => { console.log("Example app listening on port " + PORT) });
+// knex('products')
+// .returning('id')
+// .insert({name: 'teste', upc: '1', ean: '1', image: 'teste', brand: 'teste', category_id: 1})
+// .then((result) => {
+//   console.log(result);
+// })
+// .catch((error) => {
+//   console.log(error);
+// })
+
+app.listen(PORT, IP, () => {
+  console.log("Example app listening on port " + PORT)
+});
+
+
+
+
 
