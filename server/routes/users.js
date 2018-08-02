@@ -17,7 +17,7 @@ module.exports = function(DataHelpers) {
 
       DataHelpers.registerUser(userName, userEmail, userPassword, (err, user_id) => {
         if (err) {
-          res.status(500).send(err);
+          res.status(201).send(err);
         } else {
           res.status(201).json({ id: user_id });
         }
@@ -38,7 +38,7 @@ module.exports = function(DataHelpers) {
 
       DataHelpers.loginUser(userEmail, userPassword, (err, user, lists) => {
         if (err) {
-          res.status(500).send(err);
+          res.status(201).send(err);
         } else {
           res.status(201).json({ user, lists });
         }

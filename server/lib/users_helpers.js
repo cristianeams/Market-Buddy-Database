@@ -4,6 +4,7 @@
 module.exports = function makeDataHelpers(db) {
   return {
 
+    // FUNCTION TO REGISTER A NEW USER
     registerUser: function (userName, userEmail, userPassword, cb) {
 
       if (!userName || !userEmail || !userPassword) {
@@ -37,15 +38,18 @@ module.exports = function makeDataHelpers(db) {
 
     },
 
+    // FUNCTION TO LOGIN AN EXISTING USER
     loginUser: function (userEmail, userPassword, cb) {
 
       if (!userEmail || !userPassword) {
         return cb('Email and password must not be empty')
       }
 
-      let checkUser = db.select('*').from('users').where('email',userEmail).orWhere('password',userPassword);
+      let checkUser = db.select('*').from('users').where('email',userEmail).andWhere('password',userPassword);
+
       checkUser.then((myUser) => {
         if (myUser.length) {
+          console.log(myUser)
           let checkUserLists = db.select('*').from('lists').where('user_id',myUser[0].id);
           checkUserLists.then(lists => {
             cb(null,lists)
