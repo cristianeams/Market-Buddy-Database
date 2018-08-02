@@ -6,6 +6,13 @@ module.exports = function makeDataHelpers(db) {
 
     registerUser: function (userName, userEmail, userPassword, cb) {
 
+      if (!userName || !userEmail || !userPassword) {
+        return cb('Name, email and password must not be empty')
+      }
+      if (userEmail.indexOf('@') < 0) {
+        return cb('Email must have an @ identifier')
+      }
+
       let checkEmail = db.select('id').from('users').where('email',userEmail);
 
       checkEmail.then((result) => {
@@ -32,32 +39,27 @@ module.exports = function makeDataHelpers(db) {
 
     loginUser: function (userEmail, userPassword, cb) {
 
+      if (!userEmail || !userPassword) {
+        return cb('Email and password must not be empty')
+      }
+
       let checkUser = db.select('*').from('users').where('email',userEmail).orWhere('password',userPassword);
-
       checkUser.then((myUser) => {
-
-        if (myUser) {
-
-          let checkUserLists = db.select('*').from('lists').where('user_id',myUser.id);
-
+        if (myUser.length) {
+          let checkUserLists = db.select('*').from('lists').where('user_id',myUser[0].id);
           checkUserLists.then(lists => {
-            let userLists = ['mylist'];
-            if (lists) {
-              cb(null, userLists);
-            }
+            cb(null,lists)
           })
           .catch(err => {
             return cb(err)
           })
-
         } else {
-          return cb('Wrong email and/or password');
+          return cb("User don't exist");
         }
       })
       .catch(err => {
         return cb(err)
       })
-
     }
 
   };

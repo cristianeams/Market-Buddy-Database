@@ -19,17 +19,24 @@ module.exports = function makeDataHelpers(db) {
         }
 
         query.then((products) => {
-        cb(null, products, products.length)
+          cb(null, products, products.length)
         })
         .catch(err => {
-        return cb(err)
+          return cb(err)
         })
     },
 
     getProductByID: function(product_id, cb) {
       db.select('*').from('products').where('id',product_id)
       .then((product) => {
-        cb(null, product, product.length)
+        db.select('*').from('prices').where('product_id',product[0].id)
+        .then((productPrices) => {
+          product[0].prices = productPrices
+          cb(null, product, product.length)
+        })
+        .catch(err => {
+          return cb(err)
+        })
       })
       .catch(err => {
         return cb(err)
