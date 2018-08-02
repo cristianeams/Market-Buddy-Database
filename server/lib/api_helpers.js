@@ -321,3 +321,9 @@ ele precisa ser preenchido totalmente ou quase totalmente pelas outras duas APIs
 
 ================================================ */
 
+
+// http://localhost:7000/apis?api=itemdb&upc=090802113459
+// http://localhost:7000/apis?api=wallmart&name=honey
+// http://localhost:7000/apis?api=buycott&upc=090802113459
+// http://localhost:7000/apis/all?name=apple
+
