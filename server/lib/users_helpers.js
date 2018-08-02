@@ -41,9 +41,9 @@ module.exports = function makeDataHelpers(db) {
           let checkUserLists = db.select('*').from('lists').where('user_id',myUser.id);
 
           checkUserLists.then(lists => {
-            let userLists = [];
+            let userLists = ['mylist'];
             if (lists) {
-
+              cb(null, userLists);
             }
           })
           .catch(err => {
