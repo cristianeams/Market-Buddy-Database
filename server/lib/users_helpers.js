@@ -9,15 +9,10 @@ module.exports = function makeDataHelpers(db) {
       let checkEmail = db.select('id').from('users').where('email',userEmail);
 
       checkEmail.then((result) => {
-
         if (result.length > 0) {
-
-          console.log('E-mail already exist');
-
+          return cb('E-mail already exist');
         } else {
-
           let userAvatar = 'https://api.adorable.io/avatars/285/' + userName + '.png';
-  
           db('users')
           .returning('id')
           .insert({name: userName, email: userEmail, avatar: userAvatar, password: userPassword})
@@ -27,10 +22,38 @@ module.exports = function makeDataHelpers(db) {
           .catch(err => {
             return cb(err)
           })
-
         }
       })
+      .catch(err => {
+        return cb(err)
+      })
 
+    },
+
+    loginUser: function (userEmail, userPassword, cb) {
+
+      let checkUser = db.select('*').from('users').where('email',userEmail).orWhere('password',userPassword);
+
+      checkUser.then((myUser) => {
+
+        if (myUser) {
+
+          let checkUserLists = db.select('*').from('lists').where('user_id',myUser.id);
+
+          checkUserLists.then(lists => {
+            let userLists = [];
+            if (lists) {
+
+            }
+          })
+          .catch(err => {
+            return cb(err)
+          })
+
+        } else {
+          return cb('Wrong email and/or password');
+        }
+      })
       .catch(err => {
         return cb(err)
       })
