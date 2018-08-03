@@ -7,7 +7,7 @@ module.exports = function(DataHelpers) {
 
   // ROUTE TO REGISTER THE NEW USER
   usersRoutes.post("/register", function(req, res) {
-    
+
     req.on('data',function(result){
 
       let myUser = JSON.parse(result);
@@ -33,8 +33,9 @@ module.exports = function(DataHelpers) {
     req.on('data',function(result){
 
       let myUser = JSON.parse(result);
-      let userEmail = myUser.user.email;
-      let userPassword = myUser.user.password;
+      let user = JSON.parse(myUser.user);
+      let userEmail = user.email;
+      let userPassword = user.password;
 
       DataHelpers.loginUser(userEmail, userPassword, (err, user, lists) => {
         if (err) {

@@ -14,24 +14,26 @@ module.exports = function makeDataHelpers(db) {
     addWallmartItems: function(content) {
       let result = [];
       let newItem = {};
-      for (let i=0; i < content.length; i++) {
-        let itemCategories = content[i].categoryPath;
-        let arrayCategories = itemCategories.split('/');
-        if (itemCategories.indexOf('/')) {
-          itemCategories = arrayCategories;
+      if (content) {
+        for (let i=0; i < content.length; i++) {
+          let itemCategories = content[i].categoryPath;
+          let arrayCategories = itemCategories.split('/');
+          if (itemCategories.indexOf('/')) {
+            itemCategories = arrayCategories;
+          }
+          newItem = {
+            name: content[i].name,
+            upc: content[i].upc,
+            ean: 0,
+            price: content[i].salePrice,
+            image_s: content[i].thumbnailImage,
+            image_m: content[i].mediumImage,
+            image_l: content[i].largeImage,
+            brand: content[i].brandName,
+            category: itemCategories
+          }
+          result.push(newItem);
         }
-        newItem = {
-          name: content[i].name,
-          upc: content[i].upc,
-          ean: 0,
-          price: content[i].salePrice,
-          image_s: content[i].thumbnailImage,
-          image_m: content[i].mediumImage,
-          image_l: content[i].largeImage,
-          brand: content[i].brandName,
-          category: itemCategories
-        }
-        result.push(newItem);
       }
       return result;
     },
@@ -44,23 +46,25 @@ module.exports = function makeDataHelpers(db) {
     addItemDbItems: function(content) {
       let result = [];
       let newItem = {};
-      for (let i=0; i < content.length; i++) {
-        let itemImage = '';
-        if (content[i].images.length) {
-          itemImage = content[i].images[0];
+      if (content) {
+        for (let i=0; i < content.length; i++) {
+          let itemImage = '';
+          if (content[i].images.length) {
+            itemImage = content[i].images[0];
+          }
+          newItem = {
+            name: content[i].title,
+            upc: content[i].upc,
+            ean: content[i].ean,
+            price: content[i].lowest_recorded_price,
+            image_s: itemImage,
+            image_m: itemImage,
+            image_l: itemImage,
+            brand: content[i].brand,
+            category: 1
+          }
+          result.push(newItem);
         }
-        newItem = {
-          name: content[i].title,
-          upc: content[i].upc,
-          ean: content[i].ean,
-          price: content[i].lowest_recorded_price,
-          image_s: itemImage,
-          image_m: itemImage,
-          image_l: itemImage,
-          brand: content[i].brand,
-          category: 1
-        }
-        result.push(newItem);
       }
       return result;
     },
@@ -69,19 +73,21 @@ module.exports = function makeDataHelpers(db) {
     addBuycottItems: function(content) {
       let result = [];
       let newItem = {};
-      for (let i=0; i < content.length; i++) {
-        newItem = {
-          name: content[i].product_name,
-          upc: content[i].product_gtin,
-          ean: 0,
-          price: 0,
-          image_s: content[i].product_image_url,
-          image_m: content[i].product_image_url,
-          image_l: content[i].product_image_url,
-          brand: content[i].brand_name,
-          category: content[i].category_name
+      if (content) {
+        for (let i=0; i < content.length; i++) {
+          newItem = {
+            name: content[i].product_name,
+            upc: content[i].product_gtin,
+            ean: 0,
+            price: 0,
+            image_s: content[i].product_image_url,
+            image_m: content[i].product_image_url,
+            image_l: content[i].product_image_url,
+            brand: content[i].brand_name,
+            category: content[i].category_name
+          }
+          result.push(newItem);
         }
-        result.push(newItem);
       }
       return result;
     },
@@ -92,8 +98,8 @@ module.exports = function makeDataHelpers(db) {
       let returnApiUrl = '';
 
       //wallmart api
-      let wmart_upc = process.env.WMART_UPC + 'apiKey=' + process.env.WMART_USER_KEY + '&upc=' + upc;
-      let wmart_search = process.env.WMART_SEARCH + 'query=' + name + '&format=json&apiKey=' + process.env.WMART_USER_KEY;
+      let wmart_upc = process.env.WMART_UPC + 'apiKey=' + process.env.WMART_USER_KEY + '&upc=' + upc + '&numItems=25';
+      let wmart_search = process.env.WMART_SEARCH + 'query=' + name + '&numItems=25&format=json&apiKey=' + process.env.WMART_USER_KEY;
 
       //buycott api
       let bcott_upc = process.env.BCOTT_UPC + 'barcode=' + upc + '&access_token=' + process.env.BCOTT_TOKEN;
@@ -153,97 +159,29 @@ module.exports = function makeDataHelpers(db) {
         // 2 - We have 3 images for each product
         // 3 - Categories can be more than one and are separated by slash (/) so we need to use arrays here
         if (company === 'wallmart') {
-
-          //console.log(body);
-
           result = this.addWallmartItems(body.items);
-
-          // for (let i=0; i < body.items.length; i++) {
-
-          //   let itemCategories = body.items[i].categoryPath;
-          //   let arrayCategories = itemCategories.split('/');
-
-          //   // if we have more than one category and they are
-          //   // separated by slash (/) we create an array for that
-          //   // if dont we just use the first one
-          //   if (itemCategories.indexOf('/')) {
-          //     itemCategories = arrayCategories;
-          //   }
-
-          //   newItem = {
-          //     name: body.items[i].name,
-          //     upc: body.items[i].upc,
-          //     ean: 0,
-          //     price: body.items[i].salePrice,
-          //     image_s: body.items[i].thumbnailImage,
-          //     image_m: body.items[i].mediumImage,
-          //     image_l: body.items[i].largeImage,
-          //     brand: body.items[i].brandName,
-          //     category: itemCategories
-          //   }
-          //   result.push(newItem);
-          // }
-
         }
 
+        // BUYCOTT API INFOS
+        // 1 - We can use just to search by UPC. We need to pay for use the names search
+        // 2 - We have almost everything. We don't have the price
         if (company === 'buycott') {
-
-          // console.log(body);
-
           result = this.addBuycottItems(body.products);
-
-          // for (let i=0; i < body.products.length; i++) {
-          //   newItem = {
-          //     name: body.products[i].product_name,
-          //     upc: body.products[i].product_gtin,
-          //     ean: 0,
-          //     price: 0,
-          //     image_s: body.products[i].product_image_url,
-          //     image_m: body.products[i].product_image_url,
-          //     image_l: body.products[i].product_image_url,
-          //     brand: body.products[i].brand_name,
-          //     category: body.products[i].category_name
-          //   }
-          //   result.push(newItem);
-          // }
-
         }
 
-        // ITEMDB
+        // ITEMDB API INFOS
+        // 1 - We don't have the category but almost everything it's equal with wallmart and that's very good
         if (company === 'itemdb') {
-
-          //console.log(body);
-
           result = this.addItemDbItems(body.items);
-
-          // for (let i=0; i < body.items.length; i++) {
-
-          //   let itemImage = '';
-
-          //   if (body.items[i].images.length) {
-          //     itemImage = body.items[i].images[0];
-          //   }
-
-          //   newItem = {
-          //     name: body.items[i].title,
-          //     upc: body.items[i].upc,
-          //     ean: body.items[i].ean,
-          //     price: body.items[i].lowest_recorded_price,
-          //     image_s: itemImage,
-          //     image_m: itemImage,
-          //     image_l: itemImage,
-          //     brand: body.items[i].brand,
-          //     category: 1
-          //   }
-          //   result.push(newItem);
-          // }
-
         }
 
         return result;
 
       })
-      .catch(error=> { console.log(error) } )
+      .catch(error=> {
+        let myError = { error: 'Item not found' }
+        return myError
+      } )
     },
 
     // WALLMART API TESTs
@@ -265,43 +203,67 @@ module.exports = function makeDataHelpers(db) {
     // AS QUERYSTRING AND RETURN THE RESULT IN JSON CONTENT
     getAPIbyCompany: function(api, name, upc, cb) {
 
-      let apiFullUrl = '';
-      let apiResult = '';
       let apiResolve = '';
 
-      apiFullUrl = this.mountApiUrl(name, upc, api);
-      apiResult = this.myApiRequest(apiFullUrl,api);
-      apiResolve = Promise.resolve(apiResult);
-      apiResolve.then(function(content){
-        cb(null,content);
+      let callApi = this.callAllApis(api, name, upc)
+      apiResolve = Promise.resolve(callApi);
+      apiResolve.then((content) => {
+        cb(null, content)
       });
 
     },
+
+    callAllApis: function(api, name, upc) {
+      let apiFullUrl = '';
+      let apiResult = '';
+      let apiResolve = '';
+      apiFullUrl = this.mountApiUrl(name, upc, api);
+      apiResult = this.myApiRequest(apiFullUrl,api);
+      apiResolve = Promise.resolve(apiResult);
+      return apiResolve
+    },
+
 
     // FUNCTION THAT SEARCH FOR ALL APIS IN THE SAME MOMENT, FIRST
     // FOR itemdb, THEN wallmart AND THEN buycott, AND ALWAYS
     // RETURN THE INFORMATION THAT WE NEED TO USE/SAVE IN OUR 
     // DATABASE
-    getAPIs: function(name, upc, cb) {
+    getAPIsByUPC: function(upc, cb) {
 
-      let apiFullUrl = '';
-      let apiResult = '';
-      let apiResolve = '';
-      let errorMessage = '';
-      
-      // we start with itemdb API
-      let api = 'itemdb';
+      let wallmartApiResolve = '';
+      let buycottApiResolve = '';
+      let itemdbApiResolve = '';
 
-      // we get the itemdb API results
-      apiFullUrl = this.mountApiUrl(name, upc, api);
-      apiResult = this.myApiRequest(apiFullUrl,api);
-      apiResolve = Promise.resolve(apiResult);
-      apiResolve.then(function(content){
-        console.log(content.length);
+      let wallmart = this.callAllApis('wallmart', null, upc)
+      wallmartApiResolve = Promise.resolve(wallmart);
+      wallmartApiResolve.then((resultA) => {
+        if (resultA && !resultA.error) {
+          console.log("wallmart founded! let's display it...")
+          cb(null, resultA)
+        } else {
+          console.log("wallmart couldn't. Let's try buycott...")
+          let buycott = this.callAllApis('buycott',null, upc)
+          buycottApiResolve = Promise.resolve(buycott);
+          buycottApiResolve.then((resultB)=> {
+            if (resultB && !resultB.error) {
+              console.log("buycott founded! let's display it...")
+              cb(null, resultB)
+            } else {
+              console.log("buycott couldn't too... Last try, with itemDB...")
+              let itemdb = this.callAllApis('itemdb',null, upc)
+              itemdbApiResolve = Promise.resolve(itemdb);
+              itemdbApiResolve.then((resultC) => {
+                if (resultC && !resultC.error) {
+                  console.log("itemDB founded! let's display it...")
+                  cb(null, resultC)
+                } else {
+                  console.log("ItemDB couldn't too. So we don't have this product. Sorry.")
+                }
+              })
+            }
+          })
+        }
       })
-      .catch(err => {
-        return cb(err)
-        })
 
     }
 

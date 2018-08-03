@@ -25,21 +25,30 @@ module.exports = function makeDataHelpers(db) {
           .returning('id')
           .insert({name: userName, email: userEmail, avatar: userAvatar, password: userPassword})
           .then((result)=> {
-            cb(null,result)
+            let myRegisteredUser = {
+              id: result[0],
+              name: userName,
+              email: userEmail,
+              avatar: userAvatar,
+              points: 0
+            }  
+            cb(null,myRegisteredUser)
           })
           .catch(err => {
-            return cb(err)
+            return cb('Error creating new user. Try again later.')
           })
         }
       })
       .catch(err => {
-        return cb(err)
+        return cb('Error checking email in database. Try again later.')
       })
 
     },
 
     // FUNCTION TO LOGIN AN EXISTING USER
     loginUser: function (userEmail, userPassword, cb) {
+
+      console.log(userEmail, userPassword)
 
       if (!userEmail || !userPassword) {
         return cb('Email and password must not be empty')
@@ -49,20 +58,27 @@ module.exports = function makeDataHelpers(db) {
 
       checkUser.then((myUser) => {
         if (myUser.length) {
-          console.log(myUser)
           let checkUserLists = db.select('*').from('lists').where('user_id',myUser[0].id);
           checkUserLists.then(lists => {
-            cb(null,lists)
+            let myCurrentUser = {
+              id: myUser[0].id,
+              name: myUser[0].name,
+              email: myUser[0].email,
+              avatar: myUser[0].avatar,
+              points: myUser[0].points,
+              lists: lists
+            }
+            cb(null,myCurrentUser)
           })
           .catch(err => {
-            return cb(err)
+            return cb('Error when select all the lists of the user')
           })
         } else {
           return cb("User don't exist");
         }
       })
       .catch(err => {
-        return cb(err)
+        return cb('Error trying to validate user login')
       })
     }
 

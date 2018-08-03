@@ -17,7 +17,7 @@ module.exports = function(DataHelpers) {
 
     DataHelpers.getAPIbyCompany(api, name, upc, (err, result) => {
       if (err) {
-        res.status(500).json({ error: err });
+        res.status(201).json({ error: err });
       } else {
         if (result) {
           res.status(201).json(result);
@@ -29,21 +29,19 @@ module.exports = function(DataHelpers) {
 
   });
 
-  // ROUTE TO GET ALL THE BASIC DATA THAT WE NEED,
-  // IN ANY SITUATION, TESTING ALL THE APIS THAT WE HAVE
-  apiRoutes.get("/all", function(req, res) {
+  // ROUTE TO GET PRODUCT BY UPC, SEARCHING IN ALL APIS ONCE
+  apiRoutes.get("/upc/:id", function(req, res) {
 
-    let name = req.query.name;
-    let upc = req.query.upc;
+    let upc = req.params.id;
 
-    DataHelpers.getAPIs(name, upc, (err, result) => {
+    DataHelpers.getAPIsByUPC(upc, (err, result) => {
       if (err) {
-        res.status(500).json({ error: err });
+        res.status(201).json({ error: err });
       } else {
         if (result) {
           res.status(201).json(result);
         } else {
-          res.status(201).json({ error: 'Items not found' });
+          res.status(201).json({ error: 'Item not found' });
         }
       }
     });
