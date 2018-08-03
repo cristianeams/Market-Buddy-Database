@@ -14,8 +14,9 @@ module.exports = function(DataHelpers) {
       let userName = myUser.user.name;
       let userEmail = myUser.user.email;
       let userPassword = myUser.user.password;
+      let userConfirmedPassword = myUser.user.confirmPassword;
 
-      DataHelpers.registerUser(userName, userEmail, userPassword, (err, user_id) => {
+      DataHelpers.registerUser(userName, userEmail, userPassword, userConfirmedPassword, (err, user_id) => {
         if (err) {
           res.status(201).send(err);
         } else {

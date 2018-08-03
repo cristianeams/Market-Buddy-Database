@@ -5,13 +5,17 @@ module.exports = function makeDataHelpers(db) {
   return {
 
     // FUNCTION TO REGISTER A NEW USER
-    registerUser: function (userName, userEmail, userPassword, cb) {
+    registerUser: function (userName, userEmail, userPassword, userConfirmedPassword, cb) {
 
       if (!userName || !userEmail || !userPassword) {
         return cb('Name, email and password must not be empty')
       }
       if (userEmail.indexOf('@') < 0) {
         return cb('Email must have an @ identifier')
+      }
+
+      if (userPassword != userConfirmedPassword) {
+        return cb('Passwords must match')
       }
 
       let checkEmail = db.select('id').from('users').where('email',userEmail);

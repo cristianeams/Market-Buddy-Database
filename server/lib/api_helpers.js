@@ -258,6 +258,7 @@ module.exports = function makeDataHelpers(db) {
                   cb(null, resultC)
                 } else {
                   console.log("ItemDB couldn't too. So we don't have this product. Sorry.")
+                  return cb('Item not found')
                 }
               })
             }
