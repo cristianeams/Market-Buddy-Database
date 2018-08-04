@@ -65,6 +65,42 @@ module.exports = function makeDataHelpers(db) {
       .catch(err => {
         return cb(err)
       })
+    },
+
+    getListStores: function(list_id, cb) {
+      db.select('*').from('lists').where('id',list_id)
+      .then((list) => {
+        console.log(list[0].id)
+      })
+      .catch(err => {
+        return cb(err)
+      })
+    },
+
+
+    // FUNCTION TO CREATE A NEW LIST
+    createList: function (listName, userID, cb) {
+      if (!listName) {
+        return cb('List name must not be empty')
+      }
+      db('lists').insert({name:listName, user_id:userID})
+      .then((result) => {
+        console.log(result)
+      })
+      .catch(err => {
+        return cb('Error creating new list. Try again later.')
+      })
+    },
+
+    // FUNCTION TO DELETE A LIST
+    deleteList: function (listID, cb) {
+      db('lists').where('id',listID).delete()
+      .then((result) => {
+        console.log(result)
+      })
+      .catch(err => {
+        return cb('Error deleting list. Try again later.')
+      })
     }
 
   };
