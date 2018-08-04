@@ -37,6 +37,7 @@ const prices_helpers = require("./lib/prices_helpers.js")(knex);
 const stores_helpers = require("./lib/stores_helpers.js")(knex);
 const categories_helpers = require("./lib/categories_helpers.js")(knex);
 const users_helpers = require("./lib/users_helpers.js")(knex);
+const lists_helpers = require("./lib/lists_helpers.js")(knex);
 
 // ROUTES
 const apiRoutes = require('./routes/apis')(api_helpers);
@@ -45,6 +46,7 @@ const pricesRoutes = require('./routes/prices')(prices_helpers);
 const storesRoutes = require('./routes/stores')(stores_helpers);
 const categoriesRoutes = require('./routes/categories')(categories_helpers);
 const usersRoutes = require('./routes/users')(users_helpers);
+const listsRoutes = require('./routes/lists')(lists_helpers);
 
 // MOUNTS
 app.use('/apis', apiRoutes)
@@ -53,6 +55,7 @@ app.use('/prices', pricesRoutes);
 app.use('/stores', storesRoutes);
 app.use('/categories', categoriesRoutes);
 app.use('/users', usersRoutes);
+app.use('/lists', listsRoutes);
 
 app.get("/", (req, res) => { res.render("index") });
 
