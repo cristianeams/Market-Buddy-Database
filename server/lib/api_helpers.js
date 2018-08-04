@@ -202,15 +202,12 @@ module.exports = function makeDataHelpers(db) {
     // WE HAVE (wallmart, itemdb or buycott) WITH NAME AND/OR UPC
     // AS QUERYSTRING AND RETURN THE RESULT IN JSON CONTENT
     getAPIbyCompany: function(api, name, upc, cb) {
-
       let apiResolve = '';
-
       let callApi = this.callAllApis(api, name, upc)
       apiResolve = Promise.resolve(callApi);
       apiResolve.then((content) => {
         cb(null, content)
       });
-
     },
 
     callAllApis: function(api, name, upc) {
@@ -224,8 +221,8 @@ module.exports = function makeDataHelpers(db) {
     },
 
 
-    // FUNCTION THAT SEARCH FOR ALL APIS IN THE SAME MOMENT, FIRST
-    // FOR itemdb, THEN wallmart AND THEN buycott, AND ALWAYS
+    // FUNCTION THAT SEARCH FOR UPC CODE IN ALL APIS IN THE SAME MOMENT,
+    // FIRST FOR wallmart, THEN buycott AND THEN itemdb, AND ALWAYS
     // RETURN THE INFORMATION THAT WE NEED TO USE/SAVE IN OUR 
     // DATABASE
     getAPIsByUPC: function(upc, cb) {
@@ -265,6 +262,33 @@ module.exports = function makeDataHelpers(db) {
           })
         }
       })
+
+    },
+
+    // SAME AS getAPIsByUPC FUNCTION BUT THIS ONE
+    // SEARCH ALL THE APIS BY A NAME OF A PRODUCT
+    getAPIsByName: function(name, cb) {
+
+      let wallmartApiResolve = '';
+      let buycottApiResolve = '';
+      let itemdbApiResolve = '';
+
+      let wallmart = this.callAllApis('wallmart', name, null)
+      wallmartApiResolve = Promise.resolve(wallmart);
+      wallmartApiResolve.then((resultA) => {
+        //console.log(resultA)
+        if (resultA && !resultA.error) {
+          console.log("wallmart founded! let's display it...")
+          // console.log(resultA.name)
+          resultA.forEach((key)=>{
+            console.log(key['name'])
+          })
+          //cb(null, resultA)
+        } else {
+          console.log("wallmart couldn't. Let's try buycott...")
+        }
+      })
+
 
     }
 

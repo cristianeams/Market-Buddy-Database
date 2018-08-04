@@ -48,6 +48,25 @@ module.exports = function(DataHelpers) {
 
   });
 
+  // ROUTE TO GET PRODUCT BY NAME, SEARCHING IN ALL APIS ONCE
+  apiRoutes.get("/search", function(req, res) {
+
+    let name = req.query.q;
+
+    DataHelpers.getAPIsByName(name, (err, result) => {
+      if (err) {
+        res.status(201).json({ error: err });
+      } else {
+        if (result) {
+          res.status(201).json(result);
+        } else {
+          res.status(201).json({ error: 'Item not found' });
+        }
+      }
+    });
+
+  });
+
   return apiRoutes;
 
 }
