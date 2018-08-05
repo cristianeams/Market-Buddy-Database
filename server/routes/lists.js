@@ -76,15 +76,16 @@ module.exports = function(DataHelpers) {
     req.on('data',function(result){
 
       let myList = JSON.parse(result);
-      console.log(myList)
-      let listName = 'GioTestList';
-      let userId = 1;
 
-      DataHelpers.createList(listName, userId, (err, list) => {
+      let listName = myList.name;
+      let userId = myList.user;
+      let productsList = myList.list;
+
+      DataHelpers.createList(listName, userId, productsList, (err, list_id) => {
         if (err) {
           res.status(201).send(err);
         } else {
-          res.status(201).json({ list });
+          res.status(201).json({ id: list_id });
         }
       });
 

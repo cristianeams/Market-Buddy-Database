@@ -3,8 +3,7 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('lists', function(table) {
     table.increments('id').primary();
     table.string('name').notNullable();
-    //table.decimal('total',8).notNullable();
-
+    
     table.integer('user_id').notNullable()
     .references('id').inTable('users').onDelete('cascade');
 
@@ -14,5 +13,5 @@ exports.up = function(knex, Promise) {
 }
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTable('lists');
+  return knex.schema.dropTableIfExists('lists');
 }

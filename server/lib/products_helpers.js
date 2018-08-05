@@ -59,6 +59,28 @@ module.exports = function makeDataHelpers(db) {
       .catch(err => {
         return cb(err)
       })
+    },
+
+    getProductsByUPC: function(upc, cb) {
+      db.select('*').from('products').where('upc',upc)
+      .then((products)=>{
+        //cb(null,products, products.length)
+        console.log(products)
+      })
+      .catch(err => {
+        return cb(err)
+      })
+    },
+
+    getProductsByName: function(name, cb) {
+      db.select('*').from('products').where('name','ilike', '%' + name + '%')
+      .then((products)=>{
+        //cb(null,products, products.length)
+        console.log(products)
+      })
+      .catch(err => {
+        return cb(err)
+      })
     }
 
   };

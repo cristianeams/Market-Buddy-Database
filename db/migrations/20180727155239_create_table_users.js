@@ -7,11 +7,12 @@ exports.up = function(knex, Promise) {
     table.string('avatar').notNullable();
     table.string('password').notNullable();
     table.integer('points').notNullable().defaultTo(0);
+    table.boolean('isadmin').notNullable().defaultTo(false);
     table.timestamp('created_at').defaultTo(knex.fn.now())
     table.timestamp('updated_at').defaultTo(knex.fn.now())
   })
 }
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTable('users');
+  return knex.schema.dropTableIfExists('users');
 }

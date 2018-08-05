@@ -27,6 +27,46 @@ module.exports = function(DataHelpers) {
 
   });
 
+  productsRoutes.get("/upc/:id", function(req, res) {
+
+    let upc = req.params.id;
+
+    DataHelpers.getProductsByUPC(upc, (err, products, total) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        // let myTotal = { total: total };
+        // products.unshift(myTotal);
+        if (total) {
+          res.status(201).json(products);
+        } else {
+          res.status(500).json({ error: 'Product not found' })
+        }
+      }
+    });
+
+  });
+
+  productsRoutes.get("/search", function(req, res) {
+
+    let name = req.query.q;
+
+    DataHelpers.getProductsByName(name, (err, products, total) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        // let myTotal = { total: total };
+        // products.unshift(myTotal);
+        if (total) {
+          res.status(201).json(products);
+        } else {
+          res.status(500).json({ error: 'Product not found' })
+        }
+      }
+    });
+
+  });
+
   productsRoutes.get("/:id", function(req, res) {
     let myProductID = req.params.id;
     DataHelpers.getProductByID(myProductID, (err, product, total) => {

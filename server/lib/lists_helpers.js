@@ -77,15 +77,33 @@ module.exports = function makeDataHelpers(db) {
       })
     },
 
+    // insert voter information to tb
+    insertEntries: function (quantity, list_id, product_id) {
+      return new Promise((resolve, reject) => {
+        db('entries').insert({quantity:quantity, list_id:list_id, product_id:product_id})
+          .then(row => {
+            resolve(row);
+          })
+          .catch(err => {
+            reject(err)
+          })
+      });
+    },
 
     // FUNCTION TO CREATE A NEW LIST
-    createList: function (listName, userID, cb) {
+    createList: function (listName, userID, listProducts, cb) {
       if (!listName) {
         return cb('List name must not be empty')
       }
-      db('lists').insert({name:listName, user_id:userID})
+      db('lists').returning('id').insert({name:listName, user_id:userID})
       .then((result) => {
-        console.log(result)
+        listProducts.forEach((key) => {
+          this.insertEntries(key.quantity, result[0], key.product.id)
+        })
+        .catch(err => {
+          return cb('Error creating new entry for current List. Try again later.')
+        })
+        cb(null,result)
       })
       .catch(err => {
         return cb('Error creating new list. Try again later.')
@@ -96,7 +114,7 @@ module.exports = function makeDataHelpers(db) {
     deleteList: function (listID, cb) {
       db('lists').where('id',listID).delete()
       .then((result) => {
-        console.log(result)
+        cb(null,result)
       })
       .catch(err => {
         return cb('Error deleting list. Try again later.')
