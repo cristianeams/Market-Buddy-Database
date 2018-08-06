@@ -32,7 +32,6 @@ module.exports = function makeDataHelpers(db) {
         let myListWithProducts = {
           id: list.rows[0].list_id,
           name: list.rows[0].list_name,
-          //total: list.rows[0].total,
           user: list.rows[0].user_id,
           created_at: list.rows[0].list_created_at,
           updated_at: list.rows[0].updated_at,
@@ -50,11 +49,25 @@ module.exports = function makeDataHelpers(db) {
             created_at: list.rows[i].created_at,
             updated_at: list.rows[i].updated_at,
             quantity: list.rows[i].quantity,
-            prices: []
+            stores: []
           }
           myListWithProducts.products.push(myProduct)
         }
         let myTotalProducts = myListWithProducts['products'].length
+        // for (let i = 0; i < myTotalProducts; i++ ) {
+        //   let myProduct = myListWithProducts['products'][i].id
+        //   let myQuery = 'select a.*,c.price from stores a, products b, prices c ';
+        //   myQuery += 'where a.id=c.store_id and b.id=c.product_id and b.id = ?';
+        //   db.raw(myQuery, myProduct)
+        //   .then((store)=> {
+        //     myListWithProducts['products'][i].stores.push(store.rows)
+        //     console.log(myListWithProducts['products'][i].stores)
+        //   })
+        //   .catch(err=>{
+        //     return cb(err)
+        //   })
+        //   // console.log(myListWithProducts['products'][i].stores)
+        // }
         cb(null, myListWithProducts, myTotalProducts)
       })
       .catch(err => {
@@ -120,7 +133,7 @@ module.exports = function makeDataHelpers(db) {
         db('lists').returning('id').insert({name:listName, user_id:userID})
         .then((result) => {
           listProducts.forEach((key) => {
-            this.insertEntries(key.quantity, result[0], key.product.id)
+            this.insertEntries(key.quantity, result[0], key.id)
           })
           cb(null,result[0])
         })
