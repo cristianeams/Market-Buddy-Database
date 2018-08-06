@@ -84,6 +84,34 @@ module.exports = function makeDataHelpers(db) {
       .catch(err => {
         return cb('Error trying to validate user login')
       })
+    },
+
+    // FUNCTION TO EDIT AN EXISTING USER
+    editUser: function (userInfo, cb) {
+
+      if (!userInfo.id || !userInfo.name || !userInfo.avatar) {
+        return cb('User ID, name and avatar must not be empty')
+      }
+
+      let checkUser = db.select('*').from('users').where('id',userInfo.id);
+
+      checkUser.then((myUser) => {
+        if (myUser.length) {
+          db('users').where('id',userInfo.id).update({ name: userInfo.name, avatar: userInfo.avatar, points: userInfo.points })
+          .then((result) => {
+            return cb('User profile updated')
+          })
+          .catch(err => {
+            return cb('Error updating user. Try again later.')
+          })
+        } else {
+          return cb("User don't exist. Update aborted.")
+        }
+      })
+      .catch(err => {
+        return cb('Error searching for user. Try again later.')
+      })
+
     }
 
   };

@@ -50,6 +50,38 @@ module.exports = function(DataHelpers) {
 
   });
 
+  // ROUTE TO LOGIN A USER
+  usersRoutes.post("/edit", function(req, res) {
+
+    req.on('data',function(result){
+
+      let myUser = JSON.parse(result);
+      let userName = myUser.name;
+      let userAvatar = myUser.avatar;
+      let userPoints = myUser.points;
+
+      // let randomNumber = Math.floor(Math.random() * 10);
+      // let randomName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+      let userInfo = {
+        id: myUser.id,
+        name: userName,
+        avatar: userAvatar,
+        points: userPoints
+      }
+
+      DataHelpers.editUser(userInfo, (err, result) => {
+        if (err) {
+          res.status(201).send(err);
+        } else {
+          res.status(201).send(result);
+        }
+      });
+
+    });
+
+  });
+
   return usersRoutes;
 
 }

@@ -55,9 +55,9 @@ module.exports = function(DataHelpers) {
     });
   });
 
-  listsRoutes.get("/:id/stores", function(req, res) {
+  listsRoutes.get("/:id/prices", function(req, res) {
     let myListID = req.params.id;
-    DataHelpers.getListStores(myListID, (err, list, total) => {
+    DataHelpers.getListWithAllPrices(myListID, (err, list, total) => {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
@@ -81,7 +81,12 @@ module.exports = function(DataHelpers) {
       let userId = myList.user;
       let productsList = myList.list;
 
-      DataHelpers.createList(listName, userId, productsList, (err, list_id) => {
+      let listID = 0;
+      if (myList.list_id) {
+        listID = myList.list_id;
+      }
+
+      DataHelpers.createList(listName, userId, productsList, listID, (err, list_id) => {
         if (err) {
           res.status(201).send(err);
         } else {
@@ -99,16 +104,17 @@ module.exports = function(DataHelpers) {
     req.on('data',function(result){
 
       let myList = JSON.parse(result);
-      console.log(myList)
       let listID = myUser.list.id;
 
-      DataHelpers.deleteList(listID, (err, list) => {
-        if (err) {
-          res.status(201).send(err);
-        } else {
-          res.status(201).json({ message: 'List deleted' });
-        }
-      });
+      console.log(listID);
+
+      // DataHelpers.deleteList(listID, (err, list) => {
+      //   if (err) {
+      //     res.status(201).send(err);
+      //   } else {
+      //     res.status(201).json({ message: 'List deleted' });
+      //   }
+      // });
 
     });
 

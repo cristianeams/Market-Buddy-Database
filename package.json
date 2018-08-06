@@ -29,7 +29,9 @@
     "knex": "^0.15.2",
     "knex-logger": "^0.1.0",
     "knex-migrate": "^1.6.1",
+    "mapbox-gl": "^0.47.0",
     "morgan": "^1.9.0",
+    "ol": "^5.1.3",
     "pg": "^7.4.3",
     "request": "^2.87.0",
     "request-promise": "^4.2.2"
