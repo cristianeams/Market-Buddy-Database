@@ -8,6 +8,7 @@ exports.up = function(knex, Promise) {
     table.string('longitude').notNullable();
     table.string('logo').notNullable();
     table.string('website').notNullable();
+    table.integer('color').notNullable().defaultTo('black');
     table.timestamp('created_at').defaultTo(knex.fn.now())
     table.timestamp('updated_at').defaultTo(knex.fn.now())
   })
