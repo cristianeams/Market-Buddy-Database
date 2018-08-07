@@ -276,23 +276,71 @@ module.exports = function makeDataHelpers(db) {
       let wallmart = this.callAllApis('wallmart', name, null)
       wallmartApiResolve = Promise.resolve(wallmart);
       wallmartApiResolve.then((resultA) => {
-        //console.log(resultA)
         if (resultA && !resultA.error) {
           console.log("wallmart founded! let's display it...")
-          // console.log(resultA.name)
           resultA.forEach((key)=>{
-            console.log(key['name'])
+            console.log(key)
           })
-          //cb(null, resultA)
+          cb(null, resultA)
         } else {
           console.log("wallmart couldn't. Let's try buycott...")
         }
       })
+      .catch(err=>{
+        return cb('No product founded')
+      })
 
+    },
 
+    //this.insertApiEntries(key['name'], key['upc'], key['ean'], key['image_m'],key['brand'],'1')
+
+    // insert product information to db
+    insertApiEntries: function (name, upc, ean, image) {
+      return new Promise((resolve, reject) => {
+        db('products').insert({name:name, upc:upc, ean:ean, image:image, brand:'from_wallmart', category_id:1})
+          .then(row => {
+            resolve(row);
+            let myLog = '✅ INSERTED ===> ' + name + ' exist in our database. Test it.'
+            console.log(myLog)
+          })
+          .catch(err => {
+            reject(err)
+            let myLog = '❌ error ===> ' + name
+            console.log(myLog)
+          })
+        // let myQuery = 'insert into products (name,upc,ean,image,brand) ';
+        // myQuery += "values ('" + name + "','" + upc + "','" + ean + "','" + image + "','from_wallmart',1);"
+        // console.log(myQuery) 
+      });
+    },
+
+    // Do data insert in our database from Apis by name
+    populateDatabaseFromApis: function(name, cb) {
+      let wallmartApiResolve = '';
+      // let buycottApiResolve = '';
+      // let itemdbApiResolve = '';
+  
+      let wallmart = this.callAllApis('wallmart', name, null)
+      wallmartApiResolve = Promise.resolve(wallmart);
+      wallmartApiResolve.then((resultA) => {
+        if (resultA && !resultA.error) {
+          console.log("wallmart founded! let's display it...")
+          resultA.forEach((key)=>{
+            this.insertApiEntries(key['name'], key['upc'], key['ean'], key['image_m'])
+            //console.log(key['name'], key['upc'], key['ean'], key['image'],key['brand'],'1' )
+          })
+          console.log('Products inserted in the database. Check it.')
+          cb(null,resultA)
+        } else {
+          console.log("wallmart couldn't. Let's try buycott...")
+        }
+      })
     }
 
+    //select name, upc, ean, image, brand, category_id from products;
+
   };
+
 }
 
 /* =============================================

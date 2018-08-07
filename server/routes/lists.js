@@ -135,17 +135,15 @@ module.exports = function(DataHelpers) {
     req.on('data',function(result){
 
       let myList = JSON.parse(result);
-      let listID = myUser.list.id;
+      let listID = myList.id;
 
-      console.log(listID);
-
-      // DataHelpers.deleteList(listID, (err, list) => {
-      //   if (err) {
-      //     res.status(201).send(err);
-      //   } else {
-      //     res.status(201).json({ message: 'List deleted' });
-      //   }
-      // });
+      DataHelpers.deleteList(listID, (err, list) => {
+        if (err) {
+          res.status(201).send(err);
+        } else {
+          res.status(201).json({ message: 'List deleted' });
+        }
+      });
 
     });
 

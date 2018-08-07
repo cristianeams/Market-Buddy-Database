@@ -5,7 +5,6 @@ exports.seed = function(knex, Promise) {
     // Inserts seed entries
     return knex('stores').insert([
       {
-        id: 1,
         name: 'Save on Foods',
         location: 'Pender St',
         latitude: '49.282068',
@@ -14,7 +13,6 @@ exports.seed = function(knex, Promise) {
         website: 'https://www.saveonfoods.com/'
       },
       {
-        id: 2,
         name: 'IGA',
         location: 'Pender St',
         latitude: '49.282068',
@@ -23,7 +21,6 @@ exports.seed = function(knex, Promise) {
         website: 'http://www.igastoresbc.com/'
       },
       {
-        id: 3,
         name: 'Safeway',
         location: 'Pender St',
         latitude: '49.282068',
