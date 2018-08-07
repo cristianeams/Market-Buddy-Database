@@ -5,9 +5,10 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('categories').insert([
-        {id: 1, name: 'all'},
-        {id: 2, name: 'food'},
-        {id: 3, name: 'beverage'}
+        // {id: 1, name: 'all'},
+        // {id: 2, name: 'food'},
+        // {id: 3, name: 'beverage'}
+        {name: 'all'}
       ]);
     });
 };

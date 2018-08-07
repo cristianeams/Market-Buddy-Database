@@ -5,7 +5,6 @@ exports.seed = function(knex, Promise) {
     // Inserts seed entries
     return knex('products').insert([
       {
-        id: 1,
         name: 'Baking Powder',
         upc: '062639230814',
         ean: '0062639230814',
@@ -14,7 +13,6 @@ exports.seed = function(knex, Promise) {
         category_id: 1
       },
       {
-        id: 2,
         name: 'Liquid Honey',
         upc: '062639288853',
         ean: '0062639288853',
@@ -23,7 +21,6 @@ exports.seed = function(knex, Promise) {
         category_id: 1
       },
       {
-        id: 3,
         name: 'Kraft Peanut Butter Smooth',
         upc: '068100084276',
         ean: '0068100084276',
