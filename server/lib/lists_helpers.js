@@ -20,7 +20,75 @@ module.exports = function makeDataHelpers(db) {
         })
     },
 
+    // insert voter information to db
+    insertEntries: function (quantity, list_id, product_id) {
+      return new Promise((resolve, reject) => {
+        db('entries').insert({quantity:quantity, list_id:list_id, product_id:product_id})
+          .then(row => {
+            resolve(row);
+          })
+          .catch(err => {
+            reject(err)
+          })
+      });
+    },
+
+    getPriceOfProductByStore: function(product_id) {
+      let myQuery = 'select a.*,c.price from stores a, products b, prices c ';
+      myQuery += 'where a.id=c.store_id and b.id=c.product_id and b.id = ?';
+      return new Promise((resolve, reject) => {
+        db.raw(myQuery, product_id)
+        .then((store)=> {
+          resolve(store)
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      });
+    },
+
+    getProductPrices: function(list, cb) {
+      let myResult = list;
+      let myPrices = list.forEach((key)=>{
+        let prices = this.getPriceOfProductByStore(key.id)
+        let myPrices = Promise.resolve(prices)
+        myPrices.then((content)=>{
+          // //console.log(content.rows)
+          // console.log('ARRAY DE PRECOS => ', key.prices)
+          // console.log('MEU RESULTADO ===> ', myResult)
+          // myResult.key.prices = content.rows
+          // //return cb(null,content.rows)
+          //console.log(myResult[key].prices.psuh)
+          // myResult.key.prices.push(content.rows)
+          console.log(key)
+          return cb(null, myResult)
+        })
+        // console.log(myPrices)
+        // return cb(null,key)
+
+        //console.log(key)
+        // let prices = this.getPriceOfProductByStore(key.id)
+        // let myPrices = Promise.resolve(prices)
+        // //console.log(myPrices)
+        // //console.log(myPrices)
+        // myPrices.then((content)=>{
+        //   myResult[key].prices = content.rows
+        //   // cb(null,myResult)
+        //   //console.log(content)
+        //   return Promise.all(myResult)
+        // })
+        // .catch(err=>{
+        //   return cb('Error retrieving prices')
+        // })
+      })
+      return myPrices;
+      //cb(null,myResult)
+    },
+
     getListByID: function(list_id, cb) {
+
+      let myFinalList = [];
+      let myProducts = [];
 
       let query = 'select a.id as list_id, a.name as list_name, a.created_at as list_created_at, c.*, b.quantity, ';
       query += 'd.id as user_id from lists a, entries b, products c, users d where ';
@@ -48,11 +116,33 @@ module.exports = function makeDataHelpers(db) {
             category_id: list.rows[i].category_id,
             created_at: list.rows[i].created_at,
             updated_at: list.rows[i].updated_at,
-            quantity: list.rows[i].quantity,
-            stores: []
+            quantity: list.rows[i].quantity
+            //prices: this.getPriceOfProductByStore(list.rows[i].id)
+            //prices: []
           }
+
+          // let isso = this.getPriceOfProductByStore(list.rows[i].id)
+          // let teste = Promise.resolve(isso)
+          // teste.then((content)=>{
+          //   // myProduct['prices'] = content.rows
+          //   // //console.log(myProduct)
+          //   // //myListWithProducts.products.push(myProduct)
+          //   // //cb(null, myListWithProducts, myTotalProducts)
+          //   // //console.log(myProduct)
+          //   // myProducts.push(myProduct)
+          //   // return myProducts
+          //   // return cb(null,content)
+          //   myProducts.push('teste')
+          // })
+          // .catch(err=>{
+          //   return cb(err)
+          // })
+          // console.log('MEUS PRODUTOS ===> ', myProducts)
+
+
           myListWithProducts.products.push(myProduct)
         }
+        // console.log('MEUS PRODUTOS ===> ', myProducts)
         let myTotalProducts = myListWithProducts['products'].length
         // for (let i = 0; i < myTotalProducts; i++ ) {
         //   let myProduct = myListWithProducts['products'][i].id
@@ -68,6 +158,7 @@ module.exports = function makeDataHelpers(db) {
         //   })
         //   // console.log(myListWithProducts['products'][i].stores)
         // }
+        // console.log(myFinalList)
         cb(null, myListWithProducts, myTotalProducts)
       })
       .catch(err => {
@@ -85,12 +176,13 @@ module.exports = function makeDataHelpers(db) {
       })
     },
 
-    getListWithAllPrices: function(list_id, cb) {
-      db.select('*').from('lists').where('id',list_id)
-      .then((list) => {
-        //console.log(list[0].id)
-        console.log('fazer um select com todos os precos de todos os produtos de todas as lojas a partir de uma lista')
-        console.log('se vira pra fazer isso')
+    getListWithTotals: function(list_id, cb) {
+      //let query = 'select store_id,sum(price*quantity) from store_prices where list_id = ? group by store_id;'
+      let query = 'select store_id,product_id,price,quantity from store_prices where list_id = ?'
+      db.raw(query, list_id)
+      .then((totals) => {
+        //console.log(totals.rows)
+        cb(null, totals.rows)
       })
       .catch(err => {
         return cb(err)
