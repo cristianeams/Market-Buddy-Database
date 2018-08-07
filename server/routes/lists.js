@@ -25,6 +25,30 @@ module.exports = function(DataHelpers) {
 
   });
 
+  // listsRoutes.get("/teste/:id", function(req, res) {
+  //   let myListID = req.params.id;
+  //   DataHelpers.getListByID(myListID, (err, list, total) => {
+  //     if (err) {
+  //       res.status(500).json({ error: err.message });
+  //     } else {
+  //       if (total) {
+  //         //res.status(201).json(list);
+  //         DataHelpers.getProductPrices(list.products, (err,result) => {
+  //           if (err) {
+  //             res.status(500).json({ error: err.message });
+  //           } else {
+  //             //res.status(201).json(result);
+  //             console.log(result)
+  //           }
+  //         })
+  //         // console.log(list)
+  //       } else {
+  //         res.status(500).json({ error: 'List not found' });
+  //       }
+  //     }
+  //   });
+  // });
+
   listsRoutes.get("/:id", function(req, res) {
     let myListID = req.params.id;
     DataHelpers.getListByID(myListID, (err, list, total) => {
@@ -33,6 +57,13 @@ module.exports = function(DataHelpers) {
       } else {
         if (total) {
           res.status(201).json(list);
+          // DataHelpers.getProductPrices(list, (err,result) => {
+          //   if (err) {
+          //     res.status(500).json({ error: err.message });
+          //   } else {
+          //     res.status(201).json(list);
+          //   }
+          // })
         } else {
           res.status(500).json({ error: 'List not found' });
         }
@@ -55,14 +86,14 @@ module.exports = function(DataHelpers) {
     });
   });
 
-  listsRoutes.get("/:id/prices", function(req, res) {
+  listsRoutes.get("/:id/totals", function(req, res) {
     let myListID = req.params.id;
-    DataHelpers.getListWithAllPrices(myListID, (err, list, total) => {
+    DataHelpers.getListWithTotals(myListID, (err, total) => {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
         if (total) {
-          res.status(201).json(list);
+          res.status(201).json(total);
         } else {
           res.status(201).json({ error: 'List not found' });
         }
