@@ -147,9 +147,11 @@ module.exports = function(DataHelpers) {
       // });
 
       let myList = JSON.parse(result);
-      let listID = myList.id;
 
-      DataHelpers.deleteList(listID, (err, list) => {
+      let listID = myList.id;
+      let userID = myList.user_id;
+
+      DataHelpers.deleteList(listID, userID, (err, user) => {
         if (err) {
           res.status(201).send(err);
         } else {

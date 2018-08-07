@@ -248,8 +248,8 @@ module.exports = function makeDataHelpers(db) {
       db('lists').where('id',listID).delete()
       .then((result) => {
         db.select('*').from('users').where('id',userID)
-        .then((result)=> {
-          cb(null,result)
+        .then((checked)=> {
+          cb(null,checked)
         })
         .catch(err=>{
           return cb('Error retrieving user. Try again later.')
