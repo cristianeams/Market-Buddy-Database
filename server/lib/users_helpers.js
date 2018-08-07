@@ -70,6 +70,7 @@ module.exports = function makeDataHelpers(db) {
               email: myUser[0].email,
               avatar: myUser[0].avatar,
               points: myUser[0].points,
+              isadmin: myUser[0].isadmin,
               lists: lists
             }
             cb(null,myCurrentUser)

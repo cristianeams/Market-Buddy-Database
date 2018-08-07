@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Geolocation</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+</head>
+<body>
+
+<div id='map'></div>
+<a href='#' id='geolocate' class='ui-button'>Find me</a>
+
+<script>
+//L.mapbox.accessToken = 'pk.eyJ1IjoidGltbGlzdGVuIiwiYSI6ImNqaWs5eWltbTAybG8za21zNjVuZjg5MW4ifQ.xCKtim61H1YXAkU5KT9-FQ';
+L.mapbox.accessToken = 'pk.eyJ1IjoiZ2lvdmFuaXYiLCJhIjoiY2praGdlazc2NTlsODNsbWxtZ3ltYnU3cyJ9.D4cq_wll4ondEm1Zw3s2kg';
+var map = L.mapbox.map('map', 'mapbox.streets');
+
+var myLayer = L.mapbox.featureLayer().addTo(map);
+
+// This uses the HTML5 geolocation API, which is available on
+// most mobile browsers and modern browsers, but not in Internet Explorer
+//
+// See this chart of compatibility for details:
+// http://caniuse.com/#feat=geolocation
+if (!navigator.geolocation) {
+    geolocate.innerHTML = 'Geolocation is not available';
+} else {
+      map.locate();
+}
+
+// Once we've got a position, zoom and center the map
+// on it, and add a single marker.
+map.on('locationfound', function(e) {
+    map.fitBounds(e.bounds);
+
+    myLayer.setGeoJSON({
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [e.latlng.lng, e.latlng.lat]
+        },
+        properties: {
+            'title': 'Here I am!',
+            'marker-color': '#ff8888',
+            'marker-symbol': 'star'
+        }
+    });
+
+    // And hide the geolocation button
+    geolocate.parentNode.removeChild(geolocate);
+});
+
+// If the user chooses not to allow their location
+// to be shared, display an error message.
+map.on('locationerror', function() {
+    geolocate.innerHTML = 'Position could not be found';
+});
+</script>
+</body>
+</html>
+
+<!-- 
+https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=supermarket%20near%20me&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyAHsavzVdaX9SSA3hlLJPVyDNKeM528ksU
+
+API key
+Chave	
+AIzaSyA-KybRLcNjk6qdlF4Ne3IDytNh6WmWd0Y
+Restrição	
+Nenhuma
+Data da criação	
+15 de mar de 2018 23:24:48
+API key
+Chave	
+AIzaSyAHsavzVdaX9SSA3hlLJPVyDNKeM528ksU
+Restrição	
+Nenhuma
+Data da criação	
+5 de ago de 2018 21:07:59
+
+https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
+
+
+
+https://places.cit.api.here.com/places/v1/autosuggest?at=49.28,-123.11&q=supermarket&app_id=cEFnf8LIFrbMaPpViTgE&app_code=Fq_3xSNct4qJTbyTiJTMkg
+-->
