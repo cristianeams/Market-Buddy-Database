@@ -67,6 +67,25 @@ module.exports = function(DataHelpers) {
 
   });
 
+  // ROUTE TO POPULATE THE DATABASE BY NAME IN THE APIs
+  apiRoutes.get("/create", function(req, res) {
+
+    let name = req.query.q;
+
+    DataHelpers.populateDatabaseFromApis(name, (err, result) => {
+      if (err) {
+        res.status(201).json({ error: err });
+      } else {
+        if (result) {
+          res.status(201).json(result);
+        } else {
+          res.status(201).json({ error: 'Item not found' });
+        }
+      }
+    });
+
+  });
+
   return apiRoutes;
 
 }

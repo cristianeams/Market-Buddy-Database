@@ -134,15 +134,26 @@ module.exports = function(DataHelpers) {
 
     req.on('data',function(result){
 
+      // let myList = JSON.parse(result);
+      // let listID = myList.id;
+      // let userID = myList.user_id;
+
+      // DataHelpers.deleteList(listID, userID, (err, list) => {
+      //   if (err) {
+      //     res.status(201).send(err);
+      //   } else {
+      //     res.status(201).json(list);
+      //   }
+      // });
+
       let myList = JSON.parse(result);
       let listID = myList.id;
-      let userID = myList.user_id;
 
-      DataHelpers.deleteList(listID, userID, (err, list) => {
+      DataHelpers.deleteList(listID, (err, list) => {
         if (err) {
           res.status(201).send(err);
         } else {
-          res.status(201).json(list);
+          res.status(201).json({ message: 'List deleted' });
         }
       });
 
