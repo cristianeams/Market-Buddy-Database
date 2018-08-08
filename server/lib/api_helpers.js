@@ -315,12 +315,22 @@ module.exports = function makeDataHelpers(db) {
 
     },
 
-      //this.insertApiEntries(key['name'], key['upc'], key['ean'], key['image_m'],key['brand'],'1')
-
     // insert product information to db
-    insertApiEntries: function (name, upc, ean, image) {
+    insertApiEntries: function (name, upc, ean, image, price) {
       return new Promise((resolve, reject) => {
-        db('products').insert({name:name, upc:upc, ean:ean, image:image, brand:'from_wallmart', category_id:1})
+
+        let checkUpc = upc;
+        let checkEan = ean;
+
+        if (!upc) {
+          checkUpc = '0';
+        }
+        if (!ean) {
+          checkEan = '0';
+        }
+
+        db('products').insert({name:name, upc:checkUpc, ean:checkEan, image:image, 
+          brand:'from_wallmart', category_id:1, base_price: price })
           .then(row => {
             resolve(row);
             let myLog = '✅ INSERTED ===> ' + name + ' exist in our database. Test it.'
@@ -331,9 +341,6 @@ module.exports = function makeDataHelpers(db) {
             let myLog = '❌ error ===> ' + name
             console.log(myLog)
           })
-        // let myQuery = 'insert into products (name,upc,ean,image,brand) ';
-        // myQuery += "values ('" + name + "','" + upc + "','" + ean + "','" + image + "','from_wallmart',1);"
-        // console.log(myQuery) 
       });
     },
 
@@ -349,7 +356,7 @@ module.exports = function makeDataHelpers(db) {
         if (resultA && !resultA.error) {
           console.log("wallmart founded! let's display it...")
           resultA.forEach((key)=>{
-            this.insertApiEntries(key['name'], key['upc'], key['ean'], key['image_m'])
+            this.insertApiEntries(key['name'], key['upc'], key['ean'], key['image_m'], key['price'])
             //console.log(key['name'], key['upc'], key['ean'], key['image'],key['brand'],'1' )
           })
           console.log('Products inserted in the database. Check it.')
@@ -358,9 +365,83 @@ module.exports = function makeDataHelpers(db) {
           console.log("wallmart couldn't. Let's try buycott...")
         }
       })
+    },
+
+    getRangedPrices: function(basePrice) {
+
+      let numberSplit = basePrice.split('.');
+
+      let lowPrice = Number(numberSplit[0]) - 3;
+      let maxPrice = Number(numberSplit[0]) + 3;
+
+      let myDecimalNumber = Math.floor(Math.random() * 99) + 1;
+      let myNumber = Math.floor(Math.random() * (maxPrice - lowPrice + 1)) + lowPrice;
+
+      let myReturnPrice = myNumber.toString() + '.' + myDecimalNumber.toString();
+
+      return Number(myReturnPrice);
+
+    },
+
+    // insert price information in DB
+    insertPrice: function (myQuery) {
+      return new Promise((resolve, reject) => {
+        db.raw(myQuery)
+          .then(row => {
+            resolve(row);
+            let myLog = '✅ INSERTED PRICE in our database. Test it.'
+            console.log(myLog)
+          })
+          .catch(err => {
+            reject(err)
+            let myLog = '❌ error ===> ' + err
+            console.log(myLog)
+          })
+      });
+    },
+
+    // Update prices until product ID only for the product that dont have price
+    updateProductPrices: function(untilProductID, cb) {
+
+      let myPrice = 0;
+
+      let myQuery = 'select a.id,a.base_price from products a left join prices b on ';
+      myQuery += 'a.id=b.product_id where b.product_id is null and a.id <= ?';
+
+      db.raw(myQuery, untilProductID)
+      .then((result)=>{
+        //console.log(result.rows)
+        result.rows.forEach((product)=>{
+          for (let i = 1; i <= 10; i++) {
+            if (product.id <= untilProductID) {
+              //console.log(product.base_price)
+              if (product.id === 10) {
+                myPrice = this.getRangedPrices(product.base_price)
+                console.log(myPrice, product.base_price)
+              }
+              myPrice = this.getRangedPrices(product.base_price)
+              //console.log(myPrice, product.base_price)
+              let sqlQuery = 'insert into prices (price, product_id, store_id) '
+              sqlQuery += 'values (' + myPrice + ',' + product.id + ',' + i + ')'
+              this.insertPrice(sqlQuery)
+              //db.raw(query)
+              //.then((price)=>{
+
+              //})
+              //console.log(product.id, i)
+            }
+          }
+        })
+        cb(null,result)
+        // myPrice = this.getRangedPrices(50)
+        // console.log(myPrice)
+      })
+      .catch(err=>{
+        return cb('No products founded')
+      })
     }
 
-    //select name, upc, ean, image, brand, category_id from products;
+
 
   };
 }

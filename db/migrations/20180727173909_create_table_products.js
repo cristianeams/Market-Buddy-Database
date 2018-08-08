@@ -7,6 +7,7 @@ exports.up = function(knex, Promise) {
     table.string('ean').notNullable();
     table.string('image').notNullable();
     table.string('brand').notNullable();
+    table.decimal('base_price',8).notNullable().defaultTo(0);
 
     table.integer('category_id').notNullable()
     .references('id').inTable('categories').onDelete('cascade');

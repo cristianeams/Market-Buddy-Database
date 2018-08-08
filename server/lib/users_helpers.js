@@ -52,7 +52,7 @@ module.exports = function makeDataHelpers(db) {
     // FUNCTION TO LOGIN AN EXISTING USER
     loginUser: function (userEmail, userPassword, cb) {
 
-      console.log(userEmail, userPassword)
+      //console.log('hereeeeee', userEmail, userPassword)
 
       if (!userEmail || !userPassword) {
         return cb('Email and password must not be empty')
@@ -73,13 +73,14 @@ module.exports = function makeDataHelpers(db) {
               isadmin: myUser[0].isadmin,
               lists: lists
             }
+            //console.log('chegou aqui')
             cb(null,myCurrentUser)
           })
           .catch(err => {
             return cb('Error when select all the lists of the user')
           })
         } else {
-          return cb("User don't exist");
+          return cb("User not found. Please register.");
         }
       })
       .catch(err => {

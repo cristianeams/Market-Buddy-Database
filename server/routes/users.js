@@ -34,9 +34,10 @@ module.exports = function(DataHelpers) {
     req.on('data',function(result){
 
       let myUser = JSON.parse(result);
-      let user = JSON.parse(myUser.user);
-      let userEmail = user.email;
-      let userPassword = user.password;
+      let userEmail = myUser.user.email;
+      let userPassword = myUser.user.password;
+
+      //console.log(userEmail, userPassword)
 
       DataHelpers.loginUser(userEmail, userPassword, (err, user, lists) => {
         if (err) {

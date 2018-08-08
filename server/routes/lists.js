@@ -108,6 +108,8 @@ module.exports = function(DataHelpers) {
 
       let myList = JSON.parse(result);
 
+      //console.log('AQUIIIII -> ', myList)
+
       let listName = myList.name;
       let userId = myList.user;
       let productsList = myList.list;
@@ -116,6 +118,11 @@ module.exports = function(DataHelpers) {
       if (myList.list_id) {
         listID = myList.list_id;
       }
+
+      console.log('nome da lista => ', listName)
+      console.log('user id => ', userId)
+      console.log('productsList => ', productsList)
+      console.log('listID => ', listID)
 
       DataHelpers.createList(listName, userId, productsList, listID, (err, list_id) => {
         if (err) {

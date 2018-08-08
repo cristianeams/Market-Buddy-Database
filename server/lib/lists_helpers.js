@@ -245,15 +245,17 @@ module.exports = function makeDataHelpers(db) {
 
     // FUNCTION TO DELETE A LIST
     deleteList: function (listID, userID, cb) {
+      //console.log(listID)
       db('lists').where('id',listID).delete()
       .then((result) => {
-        db.select('*').from('users').where('id',userID)
-        .then((checked)=> {
-          cb(null,checked)
-        })
-        .catch(err=>{
-          return cb('Error retrieving user. Try again later.')
-        })
+        // db.select('*').from('users').where('id',userID)
+        // .then((checked)=> {
+        //   cb(null,checked)
+        // })
+        // .catch(err=>{
+        //   return cb('Error retrieving user. Try again later.')
+        // })
+        cb(null,result)
       })
       .catch(err => {
         return cb('Error deleting list. Try again later.')

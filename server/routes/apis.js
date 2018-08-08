@@ -67,25 +67,54 @@ module.exports = function(DataHelpers) {
 
   });
 
-  // ROUTE TO POPULATE THE DATABASE BY NAME IN THE APIs
-  apiRoutes.get("/create", function(req, res) {
+  /// THIS COMMENT EXISTS TO AVOID THAT WE CREATE NEW PRODUCTS WITHOUT WANT IT
 
-    let name = req.query.q;
+  // // ROUTE TO POPULATE THE DATABASE BY NAME IN THE APIs
+  // apiRoutes.get("/create", function(req, res) {
 
-    DataHelpers.populateDatabaseFromApis(name, (err, result) => {
-      if (err) {
-        res.status(201).json({ error: err });
-      } else {
-        if (result) {
-          res.status(201).json(result);
-        } else {
-          res.status(201).json({ error: 'Item not found' });
-        }
-      }
-    });
+  //   let name = req.query.q;
 
-  });
+  //   DataHelpers.populateDatabaseFromApis(name, (err, result) => {
+  //     if (err) {
+  //       res.status(201).json({ error: err });
+  //     } else {
+  //       if (result) {
+  //         res.status(201).json(result);
+  //       } else {
+  //         res.status(201).json({ error: 'Item not found' });
+  //       }
+  //     }
+  //   });
+
+  // });
+
+  ///// THIS IS COMMENT BECAUSE UPDATE PRICES IN DATABASE SO JUST DO IT IF REALLY WANT.
+
+  // // ROUTE TO UPDATE THE PRICE OF EACH PRODUCT WITHOUT IT
+  // apiRoutes.get("/create/prices", function(req, res) {
+
+  //   let untilProductID = req.query.until;
+
+  //   DataHelpers.updateProductPrices(untilProductID, (err, result) => {
+  //     if (err) {
+  //       res.status(201).send(err);
+  //     } else {
+  //       if (result) {
+  //         res.status(201).send('Prices updated');
+  //       } else {
+  //         res.status(201).send('Error updating prices');
+  //       }
+  //     }
+  //   });
+
+  // });
 
   return apiRoutes;
 
 }
+
+// create products in database that matches with cauliflower in wallmart api
+// http://localhost:7000/apis/create/?q=cauliflower
+
+// insert prices for all stores for all products that id is lower than 2100
+// http://localhost:7000/apis/create/prices?until=2100
