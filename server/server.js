@@ -62,7 +62,7 @@ app.use('/maps', MapsRoutes);
 
 app.get("/", (req, res) => { res.render("index") });
 app.get("/map", (req, res) => { res.render("map") });
-app.get("/map2", (req, res) => { res.render("map2") });
+app.get("/map2", (req, res) => { res.render("modal_map") });
 
 app.listen(PORT, IP, () => {
   console.log("Example app listening on port " + PORT)

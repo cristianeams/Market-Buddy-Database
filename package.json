@@ -30,6 +30,7 @@
     "knex-logger": "^0.1.0",
     "knex-migrate": "^1.6.1",
     "mapbox-gl": "^0.47.0",
+    "materialize-css": "^1.0.0-rc.2",
     "morgan": "^1.9.0",
     "ol": "^5.1.3",
     "pg": "^7.4.3",

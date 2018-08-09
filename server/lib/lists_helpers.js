@@ -217,6 +217,9 @@ module.exports = function makeDataHelpers(db) {
 
     // FUNCTION TO CREATE A NEW LIST
     createList: function (listName, userID, listProducts, listID, cb) {
+
+      //console.log(listProducts)
+
       if (!listName) {
         return cb('List name must not be empty')
       }
@@ -225,6 +228,7 @@ module.exports = function makeDataHelpers(db) {
         db('lists').returning('id').insert({name:listName, user_id:userID})
         .then((result) => {
           listProducts.forEach((key) => {
+            //console.log(key)
             this.insertEntries(key.quantity, result[0], key.id)
           })
           cb(null,result[0])
@@ -234,8 +238,11 @@ module.exports = function makeDataHelpers(db) {
         })
       // IF THE LIST ALREADY EXIST, WE JUST UPDATE THE PRODUCTS AND QUANTITIES
       } else {
+        //console.log('WE ARE HEREEEEE')
         this.deleteEntries(listID)
+        //console.log('list entries deleted')
         listProducts.forEach((key) => {
+          //console.log(key.quantity, listID, key.id)
           this.insertEntries(key.quantity, listID, key.id)
         })
         cb(null,listID)

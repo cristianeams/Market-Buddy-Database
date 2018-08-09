@@ -104,11 +104,15 @@ module.exports = function(DataHelpers) {
   // ROUTE TO CREATE A NEW LIST
   listsRoutes.post("/new", function(req, res) {
 
+    // console.log(req.body)
+    // console.log(req.params)
+
     req.on('data',function(result){
 
-      let myList = JSON.parse(result);
+      //console.log(JSON.parse(result))
 
-      //console.log('AQUIIIII -> ', myList)
+      let myList = JSON.parse(result);
+      // //console.log(myList)
 
       let listName = myList.name;
       let userId = myList.user;
@@ -119,10 +123,34 @@ module.exports = function(DataHelpers) {
         listID = myList.list_id;
       }
 
-      console.log('nome da lista => ', listName)
-      console.log('user id => ', userId)
-      console.log('productsList => ', productsList)
-      console.log('listID => ', listID)
+      // let listName = myList.name;
+      // let userId = myList.user;
+      // let productsList = myList.list;
+
+      //console.log(listName, userId, productsList, listID)
+
+      //console.log('MY RESULT ====> ', JSON.parse(result).prices)
+
+      //let myList = JSON.parse(result);
+      // console.log(myList)
+
+      // let myPrices 
+
+      //console.log('HEREEEEEE ======> ', JSON.parse(myList))
+
+      // let listName = myList.name;
+      // let userId = myList.user;
+      // let productsList = myList.list;
+
+      // let listID = 0;
+      // if (myList.list_id) {
+      //   listID = myList.list_id;
+      // }
+
+      // // console.log('nome da lista => ', listName)
+      // // console.log('user id => ', userId)
+      // // console.log('productsList => ', productsList)
+      // // console.log('listID => ', listID)
 
       DataHelpers.createList(listName, userId, productsList, listID, (err, list_id) => {
         if (err) {
@@ -154,6 +182,8 @@ module.exports = function(DataHelpers) {
       // });
 
       let myList = JSON.parse(result);
+
+      //console.log(myList)
 
       let listID = myList.id;
       let userID = myList.user_id;
