@@ -69,45 +69,45 @@ module.exports = function(DataHelpers) {
 
   /// THIS COMMENT EXISTS TO AVOID THAT WE CREATE NEW PRODUCTS WITHOUT WANT IT
 
-  // ROUTE TO POPULATE THE DATABASE BY NAME IN THE APIs
-  apiRoutes.get("/create", function(req, res) {
+  // // ROUTE TO POPULATE THE DATABASE BY NAME IN THE APIs
+  // apiRoutes.get("/create", function(req, res) {
 
-    let name = req.query.q;
+  //   let name = req.query.q;
 
-    DataHelpers.populateDatabaseFromApis(name, (err, result) => {
-      if (err) {
-        res.status(201).json({ error: err });
-      } else {
-        if (result) {
-          res.status(201).json(result);
-        } else {
-          res.status(201).json({ error: 'Item not found' });
-        }
-      }
-    });
+  //   DataHelpers.populateDatabaseFromApis(name, (err, result) => {
+  //     if (err) {
+  //       res.status(201).json({ error: err });
+  //     } else {
+  //       if (result) {
+  //         res.status(201).json(result);
+  //       } else {
+  //         res.status(201).json({ error: 'Item not found' });
+  //       }
+  //     }
+  //   });
 
-  });
+  // });
 
   ///// THIS IS COMMENT BECAUSE UPDATE PRICES IN DATABASE SO JUST DO IT IF REALLY WANT.
 
-  // ROUTE TO UPDATE THE PRICE OF EACH PRODUCT WITHOUT IT
-  apiRoutes.get("/create/prices", function(req, res) {
+  // // ROUTE TO UPDATE THE PRICE OF EACH PRODUCT WITHOUT IT
+  // apiRoutes.get("/create/prices", function(req, res) {
 
-    let untilProductID = req.query.until;
+  //   let untilProductID = req.query.until;
 
-    DataHelpers.updateProductPrices(untilProductID, (err, result) => {
-      if (err) {
-        res.status(201).send(err);
-      } else {
-        if (result) {
-          res.status(201).send('Prices updated');
-        } else {
-          res.status(201).send('Error updating prices');
-        }
-      }
-    });
+  //   DataHelpers.updateProductPrices(untilProductID, (err, result) => {
+  //     if (err) {
+  //       res.status(201).send(err);
+  //     } else {
+  //       if (result) {
+  //         res.status(201).send('Prices updated');
+  //       } else {
+  //         res.status(201).send('Error updating prices');
+  //       }
+  //     }
+  //   });
 
-  });
+  // });
 
   return apiRoutes;
 

@@ -15,8 +15,6 @@ module.exports = function(DataHelpers) {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        // let myTotal = { total: total };
-        // products.unshift(myTotal);
         if (total) {
           res.status(201).json(products);
         } else {
@@ -35,8 +33,6 @@ module.exports = function(DataHelpers) {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        // let myTotal = { total: total };
-        // products.unshift(myTotal);
         if (total) {
           res.status(201).json(products);
         } else {
@@ -55,8 +51,6 @@ module.exports = function(DataHelpers) {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        // let myTotal = { total: total };
-        // products.unshift(myTotal);
         if (total) {
           res.status(201).json(products);
         } else {

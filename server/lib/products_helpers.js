@@ -64,7 +64,6 @@ module.exports = function makeDataHelpers(db) {
     getProductsByUPC: function(upc, cb) {
       db.select('*').from('products').where('upc',upc)
       .then((products)=>{
-        //cb(null,products, products.length)
         console.log(products)
       })
       .catch(err => {
@@ -75,7 +74,6 @@ module.exports = function makeDataHelpers(db) {
     getProductsByName: function(name, cb) {
       db.select('*').from('products').where('name','ilike', '%' + name + '%')
       .then((products)=>{
-        //cb(null,products, products.length)
         console.log(products)
       })
       .catch(err => {

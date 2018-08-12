@@ -38,14 +38,6 @@ exports.seed = function(knex, Promise) {
         {price: 8.75, product_id: 3, store_id: 8},
         {price: 9.75, product_id: 3, store_id: 9},
         {price: 10.75, product_id: 3, store_id: 10}
-
-        // {price: 2, product_id: 2, store_id: 1},
-        // {price: 4, product_id: 2, store_id: 2},
-        // {price: 6, product_id: 2, store_id: 3},
-        // {price: 9, product_id: 3, store_id: 1},
-        // {price: 8, product_id: 3, store_id: 2},
-        // {price: 7, product_id: 3, store_id: 3}
-
       ]);
     });
 };

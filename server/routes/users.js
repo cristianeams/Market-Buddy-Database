@@ -37,8 +37,6 @@ module.exports = function(DataHelpers) {
       let userEmail = myUser.user.email;
       let userPassword = myUser.user.password;
 
-      //console.log(userEmail, userPassword)
-
       DataHelpers.loginUser(userEmail, userPassword, (err, user, lists) => {
         if (err) {
           res.status(201).send(err);

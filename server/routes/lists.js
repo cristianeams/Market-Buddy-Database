@@ -13,8 +13,6 @@ module.exports = function(DataHelpers) {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        // let myTotal = { total: total };
-        // categories.unshift(myTotal);
         if (total) {
           res.status(201).json(lists);
         } else {
@@ -25,30 +23,6 @@ module.exports = function(DataHelpers) {
 
   });
 
-  // listsRoutes.get("/teste/:id", function(req, res) {
-  //   let myListID = req.params.id;
-  //   DataHelpers.getListByID(myListID, (err, list, total) => {
-  //     if (err) {
-  //       res.status(500).json({ error: err.message });
-  //     } else {
-  //       if (total) {
-  //         //res.status(201).json(list);
-  //         DataHelpers.getProductPrices(list.products, (err,result) => {
-  //           if (err) {
-  //             res.status(500).json({ error: err.message });
-  //           } else {
-  //             //res.status(201).json(result);
-  //             console.log(result)
-  //           }
-  //         })
-  //         // console.log(list)
-  //       } else {
-  //         res.status(500).json({ error: 'List not found' });
-  //       }
-  //     }
-  //   });
-  // });
-
   listsRoutes.get("/:id", function(req, res) {
     let myListID = req.params.id;
     DataHelpers.getListByID(myListID, (err, list, total) => {
@@ -57,13 +31,6 @@ module.exports = function(DataHelpers) {
       } else {
         if (total) {
           res.status(201).json(list);
-          // DataHelpers.getProductPrices(list, (err,result) => {
-          //   if (err) {
-          //     res.status(500).json({ error: err.message });
-          //   } else {
-          //     res.status(201).json(list);
-          //   }
-          // })
         } else {
           res.status(500).json({ error: 'List not found' });
         }
@@ -104,15 +71,9 @@ module.exports = function(DataHelpers) {
   // ROUTE TO CREATE A NEW LIST
   listsRoutes.post("/new", function(req, res) {
 
-    // console.log(req.body)
-    // console.log(req.params)
-
     req.on('data',function(result){
 
-      //console.log(JSON.parse(result))
-
       let myList = JSON.parse(result);
-      // //console.log(myList)
 
       let listName = myList.name;
       let userId = myList.user;
@@ -122,35 +83,6 @@ module.exports = function(DataHelpers) {
       if (myList.list_id) {
         listID = myList.list_id;
       }
-
-      // let listName = myList.name;
-      // let userId = myList.user;
-      // let productsList = myList.list;
-
-      //console.log(listName, userId, productsList, listID)
-
-      //console.log('MY RESULT ====> ', JSON.parse(result).prices)
-
-      //let myList = JSON.parse(result);
-      // console.log(myList)
-
-      // let myPrices 
-
-      //console.log('HEREEEEEE ======> ', JSON.parse(myList))
-
-      // let listName = myList.name;
-      // let userId = myList.user;
-      // let productsList = myList.list;
-
-      // let listID = 0;
-      // if (myList.list_id) {
-      //   listID = myList.list_id;
-      // }
-
-      // // console.log('nome da lista => ', listName)
-      // // console.log('user id => ', userId)
-      // // console.log('productsList => ', productsList)
-      // // console.log('listID => ', listID)
 
       DataHelpers.createList(listName, userId, productsList, listID, (err, list_id) => {
         if (err) {
@@ -169,21 +101,7 @@ module.exports = function(DataHelpers) {
 
     req.on('data',function(result){
 
-      // let myList = JSON.parse(result);
-      // let listID = myList.id;
-      // let userID = myList.user_id;
-
-      // DataHelpers.deleteList(listID, userID, (err, list) => {
-      //   if (err) {
-      //     res.status(201).send(err);
-      //   } else {
-      //     res.status(201).json(list);
-      //   }
-      // });
-
       let myList = JSON.parse(result);
-
-      //console.log(myList)
 
       let listID = myList.id;
       let userID = myList.user_id;
@@ -205,7 +123,13 @@ module.exports = function(DataHelpers) {
 }
 
 
+// THIS VIEW WAS CREATED TO MAKE IT EASY ALL THE CONNECTION BETWEEN LISTS, PRICES, PRODUCTS AND
+// ENTRIES AND TO MAKE USE OF IT, AFTER MAKE ALL THE MIGRATIONS AND SEEDS WITH KNEX YOU NEED
+// TO RUN THIS SQL QUERY IN A POSTGRES CONNECTION IN THE TERMINAL, IN MBUDDY DATABASE
+// ================================================================================================
 // create view store_prices as select a.id,a.quantity,a.list_id,a.product_id,b.price,b.store_id
 // from entries a, prices b, lists c where a.list_id=c.id and a.product_id=b.product_id;
 
+// THIS SQL QUERY WE CAN USE AFTER CREATE THE VIEW TO SEE THE TOTALS BY STORE OF A LIST
+// =================================================================================================
 // select store_id,sum(price*quantity) from store_prices where list_id = 1 group by store_id;

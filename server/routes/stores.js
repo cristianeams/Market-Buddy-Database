@@ -16,8 +16,6 @@ module.exports = function(DataHelpers) {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        // let myTotal = { total: total };
-        // stores.unshift(myTotal);
         if (total) {
           res.status(201).json(stores);
         } else {

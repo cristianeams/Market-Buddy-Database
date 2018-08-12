@@ -20,16 +20,18 @@ module.exports = function makeDataHelpers(db) {
     checkIfExists: function(store_name, stores) {
       for (let i = 0; i < stores.length; i++) {
         if (store_name === stores[i].name) {
-          //console.log(stores[i].name)
           return true;
         }
       }
       return false;
     },
 
-    //getColorByStore: function(stores, result) {
-      //let myResult = stores;
-
+    // THIS IS NOT GOOD BUT WE NEED TO DO LIKE THIS FOR THE DEMO DAY
+    // THE CORRECT APPROACH HERE IT'S GO TO THE DATABASE WITH THE
+    // NAME OF THE STORE AND GET THE COLOR NAME OF THE STORE BECAUSE
+    // RIGHT NOW WE ACTUALLY IT'S NOT GET THE RIGHT INFORMATION.
+    // EVEN IF WE CHANGE IN THE DATABASE IT WILL SHOW THE STORE COLOR
+    // IN THE MAP CONSIDERING THIS FUNCTION AND NOT THE DATABASE INFORMATION
     getColorByStore: function(storeName) {
 
       let color = 'black';
@@ -58,41 +60,6 @@ module.exports = function makeDataHelpers(db) {
       }
       return color;
 
-      // return new Promise((resolve, reject) => {
-      //   //let color = 'black';
-      //   db.select('color').from('stores').where('name',storeName)
-      //     .then(row => {
-      //       //color = resolve(row);
-      //       //color = row[0].color
-      //       resolve(row[0].color)
-      //     })
-      //     .catch(err => {
-      //       // return 'black'
-      //       reject(err)
-      //     })
-      //   //console.log(color)
-      // });
-
-      // for (let i = 0; i < stores.length; i++) {
-      //   //console.log(stores[i].title, stores[i].color)
-      //   db.select('color').from('stores').where('name',stores[i].title)
-      //   .then((store)=>{
-      //     if (store.length) {
-      //       //console.log(store[0].color)
-      //       myResult[i].color = store[0].color;
-      //       //console.log(myResult[i].color)
-      //       result(myResult)
-      //     }
-      //   })
-      //   .catch((err)=>{
-      //     //myResult[i].color = 'black';
-      //     result('black')
-      //   })
-      // }
-
-      //result(myResult);
-
-      //console.log(myResult)
     },
 
     searchPlaces: function(position, cb) {
@@ -127,8 +94,6 @@ module.exports = function makeDataHelpers(db) {
         result.forEach(key=>{
           myStores.push({ name: key.name, color: key.color });
         })
-        //myStores.push('Whole Foods Market');
-        //console.log(myStores)
         myPromise.then((markets)=>{
           markets.results.forEach((key)=> {
             let place = {
@@ -136,34 +101,9 @@ module.exports = function makeDataHelpers(db) {
               position: key.position,
               text: key.vicinity,
               color: this.getColorByStore(key.title)
-              //color: 'black'
             }
-            // //console.log('aquiiiiiii')
-            // //console.log(this.checkIfExists(key.title,myStores))
-            // if (this.checkIfExists(key.title,myStores)) {
-            //   //console.log('ACHOU ===> ', key.title)
-            //   //place.color = this.getColorByStore(key.title)
-            //   //console.log(place.color)
-            //   let myColor = this.getColorByStore(key.title)
-            //   //console.log(myColor)
-            //    let teste = Promise.resolve(myColor)
-            //    teste.then((content)=>{
-            //      //place.color = content[0].color
-            //      //console.log(place.color)
-            //      //console.log(content)
-            //      myColor = content
-            //      console.log(myColor)
-            //    })
-            //    .catch(err=>{
-            //     myColor = 'black'
-            //    })
-            //    //console.log(myColor)
-            // }
             myPlaces.push(place)
           })
-          //console.log(myPlaces)
-          //this.getColorByStore(myPlaces,(myPlacesUpdated))
-          //console.log(myPlacesUpdated)
           cb(null,myPlaces)
         })
         .catch(err=>{

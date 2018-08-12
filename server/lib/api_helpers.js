@@ -152,7 +152,6 @@ module.exports = function makeDataHelpers(db) {
       .then(body=>{
 
         let result = [];
-        //let newItem = {};
 
         // WALLMART API INFOS
         // 1 - We don't have EAN number, just UPC and modelNumber, so EAN always receive 0
@@ -189,8 +188,8 @@ module.exports = function makeDataHelpers(db) {
     // http://localhost:7000/apis?api=wallmart&name=honey
 
     // BUYCOTT API TESTs
-    // https://buycott.com/api/v4/products/lookup?barcode=091796289526&access_token=l6lsjILcsOX9KoRF3hsYIzM7GwHvaLTf73bMZOfZ
-    // https://buycott.com/api/v4/products/search?q=honey&type=product&access_token=l6lsjILcsOX9KoRF3hsYIzM7GwHvaLTf73bMZOfZ
+    // https://buycott.com/api/v4/products/lookup?barcode=091796289526&access_token=<your_token>
+    // https://buycott.com/api/v4/products/search?q=honey&type=product&access_token=<your_token>
 
 
     // UPCITEMDB API TESTs
@@ -210,6 +209,8 @@ module.exports = function makeDataHelpers(db) {
       });
     },
 
+    // BASIC PROCEDURES THAT WE NEED TO USE ALL THE TIME THAT WE
+    // USE SOME API SO WE A FUNCTION FOR THAT
     callAllApis: function(api, name, upc) {
       let apiFullUrl = '';
       let apiResult = '';
@@ -265,31 +266,7 @@ module.exports = function makeDataHelpers(db) {
 
     },
 
-    // SAME AS getAPIsByUPC FUNCTION BUT THIS ONE
-    // SEARCH ALL THE APIS BY A NAME OF A PRODUCT
-    // getAPIsByName: function(name, cb) {
-
-    //   let wallmartApiResolve = '';
-    //   let buycottApiResolve = '';
-    //   let itemdbApiResolve = '';
-
-    //   let wallmart = this.callAllApis('wallmart', name, null)
-    //   wallmartApiResolve = Promise.resolve(wallmart);
-    //   wallmartApiResolve.then((resultA) => {
-    //     //console.log(resultA)
-    //     if (resultA && !resultA.error) {
-    //       console.log("wallmart founded! let's display it...")
-    //       // console.log(resultA.name)
-    //       resultA.forEach((key)=>{
-    //         console.log(key['name'])
-    //       })
-    //       //cb(null, resultA)
-    //     } else {
-    //       console.log("wallmart couldn't. Let's try buycott...")
-    //     }
-    //   })
-    // }
-
+    // SAME getAPIsByUPC LOGIC BUT SEARCHING BY NAME INSTEAD
     getAPIsByName: function(name, cb) {
 
       let wallmartApiResolve = '';
@@ -315,7 +292,10 @@ module.exports = function makeDataHelpers(db) {
 
     },
 
-    // insert product information to db
+    // INSERT A NEW PRODUCT IN THE DATABASE SEARCHING
+    // BY NAME ONLY IN WALLMART API BECAUSE IT IS THE
+    // MOST COMPLETED API THAT WE HAVE. ITEMDB IS A NICE
+    // OPTION TOO AND BUYCOOT WE NEED TO PAY TO USE IT IN THE BEST WAY
     insertApiEntries: function (name, upc, ean, image, price) {
       return new Promise((resolve, reject) => {
 
@@ -347,8 +327,6 @@ module.exports = function makeDataHelpers(db) {
     // Do data insert in our database from Apis by name
     populateDatabaseFromApis: function(name, cb) {
       let wallmartApiResolve = '';
-      // let buycottApiResolve = '';
-      // let itemdbApiResolve = '';
   
       let wallmart = this.callAllApis('wallmart', name, null)
       wallmartApiResolve = Promise.resolve(wallmart);
@@ -357,7 +335,6 @@ module.exports = function makeDataHelpers(db) {
           console.log("wallmart founded! let's display it...")
           resultA.forEach((key)=>{
             this.insertApiEntries(key['name'], key['upc'], key['ean'], key['image_m'], key['price'])
-            //console.log(key['name'], key['upc'], key['ean'], key['image'],key['brand'],'1' )
           })
           console.log('Products inserted in the database. Check it.')
           cb(null,resultA)
@@ -367,12 +344,19 @@ module.exports = function makeDataHelpers(db) {
       })
     },
 
+    // FUNCTION TO CREATE SORTED PRICES BETWEEN SOME BASE PRICE THAT YOU
+    // PASS TO IT. THIS FUNCTION WAS USED AFTER THE PRODUCT CREATION BECAUSE
+    // IN THIS PROJECT WE NEED A PRICE FOR EACH STORE AND IN A REAL PROJECT
+    // WOULD BE COMPLETELY DIFFERENT.
+    // EXAMPLE: IF YOU HAVE A PRODUCT WITH BASE_PRICE = 5 CADS THIS FUNCTION
+    // WILL RETURN TO YOU A NUMBER BETWEEN 4 AND 6 (LINES 358/359) AND
+    // FOR THE CENTS WE FIND A RANDOM NUMBER BETWEEN 1 AND 99 (LINES 361/362)
     getRangedPrices: function(basePrice) {
 
       let numberSplit = basePrice.split('.');
 
-      let lowPrice = Number(numberSplit[0]) - 3;
-      let maxPrice = Number(numberSplit[0]) + 3;
+      let lowPrice = Number(numberSplit[0]) - 1;
+      let maxPrice = Number(numberSplit[0]) + 1;
 
       let myDecimalNumber = Math.floor(Math.random() * 99) + 1;
       let myNumber = Math.floor(Math.random() * (maxPrice - lowPrice + 1)) + lowPrice;
@@ -410,31 +394,17 @@ module.exports = function makeDataHelpers(db) {
 
       db.raw(myQuery, untilProductID)
       .then((result)=>{
-        //console.log(result.rows)
         result.rows.forEach((product)=>{
           for (let i = 1; i <= 10; i++) {
             if (product.id <= untilProductID) {
-              //console.log(product.base_price)
-              if (product.id === 10) {
-                myPrice = this.getRangedPrices(product.base_price)
-                console.log(myPrice, product.base_price)
-              }
               myPrice = this.getRangedPrices(product.base_price)
-              //console.log(myPrice, product.base_price)
               let sqlQuery = 'insert into prices (price, product_id, store_id) '
               sqlQuery += 'values (' + myPrice + ',' + product.id + ',' + i + ')'
               this.insertPrice(sqlQuery)
-              //db.raw(query)
-              //.then((price)=>{
-
-              //})
-              //console.log(product.id, i)
             }
           }
         })
         cb(null,result)
-        // myPrice = this.getRangedPrices(50)
-        // console.log(myPrice)
       })
       .catch(err=>{
         return cb('No products founded')
@@ -448,20 +418,14 @@ module.exports = function makeDataHelpers(db) {
 
 /* =============================================
 OTHER TESTS IN ALL APIS
-
-1) Mesmo produto em todas as APIs (upc = 073299052203)
-
-2) procurar por APPLE no itemdb nao retorna item, logo, tem que ir pro wallmart, achar as opcoes e devolver,
-ignorando o erro do itemdb
-
-3) procurar pelo upc = 090802113459 no itemdb retorna um item incompleto, logo
-ele precisa ser preenchido totalmente ou quase totalmente pelas outras duas APIs
-
-================================================ */
-
+1) Same product in all APIs result (upc = 073299052203)
+2) If we search for APPLE (for example) in ITEMDB API we don't retrieve any result and so we need to
+go to WALLMART API, find the options and return, ignoring that we couldn't find it at ITEMDB API
+3) Search for UPC 090802113459 in ITEMDB we have an incomplete item and so we need to search for
+the next API to get the info that we still don't have
 
 // http://localhost:7000/apis?api=itemdb&upc=090802113459
 // http://localhost:7000/apis?api=wallmart&name=honey
 // http://localhost:7000/apis?api=buycott&upc=090802113459
 // http://localhost:7000/apis/all?name=apple
-
+================================================ */

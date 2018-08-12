@@ -52,8 +52,6 @@ module.exports = function makeDataHelpers(db) {
     // FUNCTION TO LOGIN AN EXISTING USER
     loginUser: function (userEmail, userPassword, cb) {
 
-      //console.log('hereeeeee', userEmail, userPassword)
-
       if (!userEmail || !userPassword) {
         return cb('Email and password must not be empty')
       }
@@ -73,7 +71,6 @@ module.exports = function makeDataHelpers(db) {
               isadmin: myUser[0].isadmin,
               lists: lists
             }
-            //console.log('chegou aqui')
             cb(null,myCurrentUser)
           })
           .catch(err => {

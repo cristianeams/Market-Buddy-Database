@@ -63,7 +63,6 @@ module.exports = function makeDataHelpers(db) {
       query += 'from stores a, products b, prices c where ';
       query += 'a.id=c.store_id and b.id=c.product_id and a.id = ?';
 
-      // db.select('*').from('prices').where('store_id',store_id)
       db.raw(query,store_id)
       .then((products) => {
         cb(null, products.rows, products.rowCount)
@@ -79,7 +78,6 @@ module.exports = function makeDataHelpers(db) {
       query += 'from stores a, products b, prices c where ';
       query += 'a.id=c.store_id and b.id=c.product_id and a.id = ? and b.id = ?';
 
-      // db.select('*').from('prices').where('store_id',store_id)
       db.raw(query,[store_id, product_id])
       .then((product) => {
         cb(null, product.rows, product.rowCount)
